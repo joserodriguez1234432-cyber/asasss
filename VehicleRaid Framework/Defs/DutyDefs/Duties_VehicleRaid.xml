@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <DutyDef>
+        <defName>VRF_VehicleSearchAndDestroy</defName>
+        <thinkNode Class="ThinkNode_Priority">
+            <subNodes>
+                <li Class="Vehicles.ThinkNode_ConditionalVehicle">
+                    <subNodes>
+                        <li Class="Vehicles.ThinkNode_ConditionalVehicleState">
+                            <canMove>false</canMove>
+                            <hasPassengers>true</hasPassengers>
+                            <subNodes>
+                                <li Class="Vehicles.ThinkNode_ExecuteAction">
+                                    <action>Vehicles.VehicleActions.DisembarkAll</action>
+                                </li>
+                            </subNodes>
+                        </li>
+                        <li Class="VehicleRaidFramework.VRF_JobGiver_Mortar"/>
+                        <li Class="VehicleRaidFramework.JobGiver_HoverNPCAssault"/>
+                        <li Class="VehicleRaidFramework.VRF_JobGiver_DynamicAssault"/>
+                        <li Class="Vehicles.JobGiver_AwaitOrders"/>
+                    </subNodes>
+                </li>
+            </subNodes>
+        </thinkNode>
+    </DutyDef>
+
+    <DutyDef>
+        <defName>VRF_VehicleArmedTransport</defName>
+        <thinkNode Class="ThinkNode_Priority">
+            <subNodes>
+                <li Class="Vehicles.ThinkNode_ConditionalVehicle">
+                    <subNodes>
+                        <li Class="VehicleRaidFramework.VRF_JobGiver_Mortar"/>
+                        <li Class="VehicleRaidFramework.JobGiver_VehicleArmedTransportMove"/>
+                        <li Class="Vehicles.JobGiver_AwaitOrders"/>
+                    </subNodes>
+                </li>
+            </subNodes>
+        </thinkNode>
+    </DutyDef>
+
+    <DutyDef>
+        <defName>VRF_VehicleTransport</defName>
+        <thinkNode Class="ThinkNode_Priority">
+            <subNodes>
+                <li Class="Vehicles.ThinkNode_ConditionalVehicle">
+                    <subNodes>
+                        <li Class="VehicleRaidFramework.JobGiver_VehicleTransportMove"/>
+                        <li Class="Vehicles.JobGiver_AwaitOrders"/>
+                    </subNodes>
+                </li>
+            </subNodes>
+        </thinkNode>
+    </DutyDef>
+
+    <DutyDef>
+        <defName>VRF_VehicleExitMap</defName>
+        <thinkNode Class="ThinkNode_Priority">
+            <subNodes>
+                <li Class="Vehicles.ThinkNode_ConditionalVehicle">
+                    <subNodes>
+                        <li Class="VehicleRaidFramework.JobGiver_HoverNPCExit"/>
+                        <li Class="VehicleRaidFramework.VRF_JobGiver_VehicleExitMap" />
+                        <li Class="Vehicles.JobGiver_AwaitOrders"/>
+                    </subNodes>
+                </li>
+            </subNodes>
+        </thinkNode>
+    </DutyDef>
+
+    <DutyDef>
+        <defName>VRF_VehicleDefendBase</defName>
+        <thinkNode Class="ThinkNode_Priority">
+            <subNodes>
+                <li Class="Vehicles.ThinkNode_ConditionalVehicle">
+                    <subNodes>
+                        <li Class="Vehicles.ThinkNode_ConditionalVehicleState">
+                            <canMove>false</canMove>
+                            <hasPassengers>true</hasPassengers>
+                            <subNodes>
+                                <li Class="Vehicles.ThinkNode_ExecuteAction">
+                                    <action>Vehicles.VehicleActions.DisembarkAll</action>
+                                </li>
+                            </subNodes>
+                        </li>
+                        <!-- Mortars fire from position using VRF_JobGiver_Mortar -->
+                        <li Class="VehicleRaidFramework.VRF_JobGiver_Mortar"/>
+                        <!-- Non-mortar vehicles hold near base but respond if attacked -->
+                        <li Class="VehicleRaidFramework.VRF_JobGiver_DefendBaseAssault"/>
+                        <li Class="Vehicles.JobGiver_AwaitOrders"/>
+                    </subNodes>
+                </li>
+            </subNodes>
+        </thinkNode>
+    </DutyDef>
+
+    <DutyDef>
+        <defName>VRF_InfantryAssault</defName>
+        <alwaysShowWeapon>true</alwaysShowWeapon>
+        <thinkNode Class="ThinkNode_Priority">
+            <subNodes>
+                <li Class="VehicleRaidFramework.JobGiver_InfantryBoardNearbyVehicle" />
+                <li Class="JobGiver_TakeCombatEnhancingDrug" />
+                <li Class="JobGiver_AIFightEnemies">
+                    <targetAcquireRadius>65</targetAcquireRadius>
+                    <targetKeepRadius>72</targetKeepRadius>
+                </li>
+                <li Class="JobGiver_AITrashColonyClose" />
+                <li Class="JobGiver_AITrashBuildingsDistant" />
+                <li Class="VehicleRaidFramework.JobGiver_FollowVehicle" />
+                <li Class="JobGiver_AIGotoNearestHostile" />
+                <li Class="JobGiver_AITrashBuildingsDistant">
+                    <attackAllInert>true</attackAllInert>
+                </li>
+                <li Class="JobGiver_AISapper">
+                    <canMineNonMineables>false</canMineNonMineables>
+                </li>
+            </subNodes>
+        </thinkNode>
+    </DutyDef>
+
+    <DutyDef>
+        <defName>VRF_InfantryAssault_Transport</defName>
+        <alwaysShowWeapon>true</alwaysShowWeapon>
+        <thinkNode Class="ThinkNode_Priority">
+            <subNodes>
+                <li Class="VehicleRaidFramework.JobGiver_DisembarkForCombat" />
+                <li Class="VehicleRaidFramework.JobGiver_BoardTransportVehicle" />
+                <li Class="JobGiver_TakeCombatEnhancingDrug" />
+                <li Class="JobGiver_AIFightEnemies">
+                    <targetAcquireRadius>65</targetAcquireRadius>
+                    <targetKeepRadius>72</targetKeepRadius>
+                </li>
+                <li Class="JobGiver_AITrashColonyClose" />
+                <li Class="JobGiver_AITrashBuildingsDistant" />
+                <li Class="VehicleRaidFramework.JobGiver_FollowTransportVehicle" />
+                <li Class="JobGiver_AIGotoNearestHostile" />
+                <li Class="JobGiver_AITrashBuildingsDistant">
+                    <attackAllInert>true</attackAllInert>
+                </li>
+                <li Class="JobGiver_AISapper">
+                    <canMineNonMineables>false</canMineNonMineables>
+                </li>
+            </subNodes>
+        </thinkNode>
+    </DutyDef>
+
+    <DutyDef>
+        <defName>VRF_TransportGuard</defName>
+        <alwaysShowWeapon>true</alwaysShowWeapon>
+        <thinkNode Class="ThinkNode_Priority">
+            <subNodes>
+                <li Class="JobGiver_TakeCombatEnhancingDrug" />
+                <li Class="JobGiver_AIDefendPoint">
+                    <targetAcquireRadius>30</targetAcquireRadius>
+                    <targetKeepRadius>35</targetKeepRadius>
+                </li>
+                <li Class="JobGiver_AITrashColonyClose" />
+                <li Class="VehicleRaidFramework.JobGiver_BoardTransportVehicle" />
+                <li Class="JobGiver_WanderNearDutyLocation">
+                    <wanderRadius>5</wanderRadius>
+                </li>
+            </subNodes>
+        </thinkNode>
+    </DutyDef>
+
+    <DutyDef>
+        <defName>VRF_InfantryExit</defName>
+        <thinkNode Class="ThinkNode_Priority">
+            <subNodes>
+                <li Class="VehicleRaidFramework.JobGiver_BoardTransportVehicleForExit" />
+                <li Class="JobGiver_ExitMapBest">
+                    <defaultLocomotion>Jog</defaultLocomotion>
+                </li>
+            </subNodes>
+        </thinkNode>
+    </DutyDef>
+
+    <DutyDef>
+        <defName>VRF_VehicleHoldStrict</defName>
+        <thinkNode Class="ThinkNode_Priority">
+            <subNodes>
+                <li Class="Vehicles.ThinkNode_ConditionalVehicle">
+                    <subNodes>
+                        <li Class="Vehicles.JobGiver_AwaitOrders"/>
+                    </subNodes>
+                </li>
+            </subNodes>
+        </thinkNode>
+    </DutyDef>
+
+</Defs>

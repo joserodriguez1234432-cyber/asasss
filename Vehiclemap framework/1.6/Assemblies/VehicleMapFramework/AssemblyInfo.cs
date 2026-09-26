@@ -1,0 +1,26 @@
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+[assembly: Extension]
+[assembly: AssemblyFileVersion("1.6.562.36880")]
+[assembly: AssemblyInformationalVersion("1.6.562+901003fb17")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyCopyright("Copyright ©OELS  2024-2025")]
+[assembly: AssemblyTrademark("")]
+[assembly: InternalsVisibleTo("VMF_AchtungPatch")]
+[assembly: InternalsVisibleTo("VMF_CEPatch")]
+[assembly: InternalsVisibleTo("VMF_DBHCompat")]
+[assembly: InternalsVisibleTo("VMF_RimefellerCompat")]
+[assembly: InternalsVisibleTo("VMF_PUAHPatch")]
+[assembly: InternalsVisibleTo("VMF_SmartFarmingPatch")]
+[assembly: InternalsVisibleTo("VMF_VEFCompat")]
+[assembly: InternalsVisibleTo("Test_DevTools")]
+[assembly: InternalsVisibleTo("MapVehiclesOcean")]
+[assembly: ComVisible(false)]
+[assembly: Guid("c4a6ce84-01a1-4f92-b731-79416b9fa721")]
+[assembly: AssemblyCompany("VehicleMapFramework")]
+[assembly: AssemblyConfiguration("Release")]
+[assembly: AssemblyProduct("VehicleMapFramework")]
+[assembly: AssemblyTitle("VehicleMapFramework")]
+[assembly: AssemblyVersion("1.6.562.0")]

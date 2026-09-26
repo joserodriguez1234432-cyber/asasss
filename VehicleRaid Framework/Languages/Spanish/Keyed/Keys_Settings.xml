@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <VRF_Settings_Category>Vehicle Raid Framework</VRF_Settings_Category>
+  <VRF_Settings_Title>Vehicle Raid Framework - Configuración de Raids Naturales</VRF_Settings_Title>
+  <VRF_Settings_Back>Volver</VRF_Settings_Back>
+  <VRF_Settings_Configure>Configurar</VRF_Settings_Configure>
+  <VRF_Settings_Details>Detalles</VRF_Settings_Details>
+  <VRF_Settings_NoFactions>No se encontraron facciones que puedan hacer raids.</VRF_Settings_NoFactions>
+  <VRF_Settings_NoVehicles>No se encontraron vehículos. Asegúrate de tener Vehicle Framework y un mod de vehículos cargados.</VRF_Settings_NoVehicles>
+  <VRF_Settings_FactionListDesc>Selecciona una facción para configurar qué vehículos pueden aparecer en sus raids naturales.</VRF_Settings_FactionListDesc>
+  <VRF_Settings_VehicleListDesc>Vehículos para la facción: {0}. Marca un vehículo para que aparezca en raids naturales.</VRF_Settings_VehicleListDesc>
+  <VRF_Settings_CombatPower>Poder de combate</VRF_Settings_CombatPower>
+  <VRF_Settings_TechLevel>Nivel tecnológico: {0}</VRF_Settings_TechLevel>
+  <VRF_Settings_VehicleType>Tipo: {0}</VRF_Settings_VehicleType>
+  <VRF_Settings_EnableForRaids>Habilitar en raids naturales</VRF_Settings_EnableForRaids>
+  <VRF_Settings_VehicleActive>Este vehículo aparecerá en raids naturales de esta facción.</VRF_Settings_VehicleActive>
+  <VRF_Settings_VehicleInactive>Este vehículo no aparecerá en raids naturales.</VRF_Settings_VehicleInactive>
+  <VRF_Settings_MinCombatPoints>Puntos mínimos del narrador para spawnear</VRF_Settings_MinCombatPoints>
+  <VRF_Settings_MaxCombatPoints>Puntos máximos del narrador para spawnear</VRF_Settings_MaxCombatPoints>
+  <VRF_Settings_Tip_CombatPower>Coste en puntos que el narrador dedica a este vehículo al componer la raid. Cuanto mayor sea, menos unidades de este tipo aparecerán en raids de bajo presupuesto.</VRF_Settings_Tip_CombatPower>
+  <VRF_Settings_Tip_MinPoints>Puntos mínimos de raid necesarios para que este vehículo pueda aparecer. Por debajo de este umbral el narrador lo ignorará al elegir las unidades.</VRF_Settings_Tip_MinPoints>
+  <VRF_Settings_Tip_MaxPoints>Límite superior de puntos de raid a partir del cual este vehículo deja de aparecer. Útil para que vehículos ligeros no salgan en raids de alta dificultad. Pon 0 para no aplicar límite.</VRF_Settings_Tip_MaxPoints>
+  <VRF_Settings_Tip_Estimator>Estos multiplicadores definen cómo el Auto-fill estima el poder de combate de cada vehículo. La fórmula suma: (HP × WeightHP) + (Armadura × WeightArmor) + (DPS × WeightDPS) + (Rango × WeightRange) + (Velocidad × WeightSpeed) + (Conductores × WeightDrivers) + (Artilleros × WeightGunners) + (Pasajeros × WeightPassengers) + (Tamaño × WeightSize).</VRF_Settings_Tip_Estimator>
+  <VRF_Settings_Tip_AirMultiplier>Multiplicador extra que se aplica al poder de combate total estimado para vehículos aéreos (helicópteros, aviones). Auméntalo si los vehículos aéreos parecen infravalorados respecto a los terrestres.</VRF_Settings_Tip_AirMultiplier>
+  <VRF_Settings_Tip_Budget>Puntos que el mod asigna para comprar vehículos en este contexto. El mod irá eligiendo vehículos habilitados por coste de poder de combate hasta agotar este presupuesto. Los vehículos con 'Forzar spawn' se añaden siempre independientemente del presupuesto.</VRF_Settings_Tip_Budget>
+  <VRF_Settings_RaidStrategies>Estrategias de raid</VRF_Settings_RaidStrategies>
+  <VRF_Settings_GlobalStrategyTitle>Filtro global de estrategias de raid</VRF_Settings_GlobalStrategyTitle>
+  <VRF_Settings_GlobalStrategyBtn>Estrategias de raid permitidas</VRF_Settings_GlobalStrategyBtn>
+  <VRF_Settings_Tip_GlobalStrategy>Controla qué estrategias de raid pueden generar vehículos de forma global. Si una estrategia está desmarcada aquí, ningún vehículo será inyectado en ese tipo de raid, independientemente de los ajustes por vehículo. Los filtros por vehículo se aplican encima de este como restricción adicional.</VRF_Settings_Tip_GlobalStrategy>
+  <VRF_Settings_GlobalStrategyHint>Las estrategias desmarcadas bloquean todos los vehículos en ese tipo de raid.</VRF_Settings_GlobalStrategyHint>
+  <VRF_Settings_VehiclePointsFractionTitle>% de los puntos de la raid que van para los vehículos</VRF_Settings_VehiclePointsFractionTitle>
+  <VRF_Settings_VehicleMapLimitTitle>Límite de vehículos con mapa por raid</VRF_Settings_VehicleMapLimitTitle>
+  <VRF_Settings_Tip_VehicleMapLimit>Máximo conjunto de gravinaves y otros vehículos de Vehicle Map Framework que el inyector puede generar en una misma raid. Al llegar al límite, los puntos restantes intentan elegir vehículos normales habilitados. Usa 0 para desactivar por completo los vehículos con mapa.</VRF_Settings_Tip_VehicleMapLimit>
+  <VRF_Settings_VehicleMapLimitWarning>Advertencia: valores altos pueden causar mucho lag, errores o inestabilidad.</VRF_Settings_VehicleMapLimitWarning>
+  <VRF_Settings_AutoFillAmmoFractionTitle>% de capacidad de carga rellenada con munición (Auto-asignar)</VRF_Settings_AutoFillAmmoFractionTitle>
+  <VRF_StrategyDialog_Title>Estrategias de raid — {0}</VRF_StrategyDialog_Title>
+  <VRF_StrategyDialog_Hint>Las estrategias marcadas permiten que este vehículo aparezca. Las desmarcadas lo bloquean.</VRF_StrategyDialog_Hint>
+  <VRF_StrategyDialog_AllOn>Activar todas</VRF_StrategyDialog_AllOn>
+  <VRF_StrategyDialog_AllOff>Desactivar todas</VRF_StrategyDialog_AllOff>
+  <VRF_Settings_Turrets>Armas / Torretas</VRF_Settings_Turrets>
+  <VRF_Settings_TurretRange>Rango: {0} - {1}</VRF_Settings_TurretRange>
+  <VRF_Settings_CargoCapacity>Capacidad de carga: {0} kg</VRF_Settings_CargoCapacity>
+  <VRF_Settings_CargoSection>Carga [{0} kg]</VRF_Settings_CargoSection>
+  <VRF_Settings_Fuel>Combustible ({0}): {1}% — {2} / {3} kg</VRF_Settings_Fuel>
+  <VRF_Settings_Ammo>Munición ({0} — {1}): {2}% — {3} unidades ({4} kg)</VRF_Settings_Ammo>
+  <VRF_Settings_Presets>Presets</VRF_Settings_Presets>
+  <VRF_Settings_Clear>Limpiar</VRF_Settings_Clear>
+  <VRF_Settings_ClearConfirm>¿Resetear toda la configuración de vehículos por facción? Esto no se puede deshacer.</VRF_Settings_ClearConfirm>
+  <VRF_Settings_AutoLoadPresets>Cargar presets de mods automáticamente al iniciar</VRF_Settings_AutoLoadPresets>
+  <VRF_Settings_PresetExport>Exportar configuración</VRF_Settings_PresetExport>
+  <VRF_Settings_PresetFileName>Nombre del archivo:</VRF_Settings_PresetFileName>
+  <VRF_Settings_Export>Exportar</VRF_Settings_Export>
+  <VRF_Settings_PresetImport>Importar preset</VRF_Settings_PresetImport>
+  <VRF_Settings_NoPresets>No se encontraron presets.</VRF_Settings_NoPresets>
+  <VRF_Settings_FlightMode>Modo de vuelo</VRF_Settings_FlightMode>
+  <VRF_Settings_FlightModeDisabled>Desactivado</VRF_Settings_FlightModeDisabled>
+  <VRF_Settings_HelicopterType>Helicóptero (hover)</VRF_Settings_HelicopterType>
+  <VRF_Settings_AirplaneType>Aeroplano (hover)</VRF_Settings_AirplaneType>
+  <VRF_Settings_HoverMoveSpeed>Velocidad de movimiento hover</VRF_Settings_HoverMoveSpeed>
+  <VRF_Settings_AirplaneMoveSpeed>Velocidad de movimiento (aeroplano)</VRF_Settings_AirplaneMoveSpeed>
+  <VRF_Settings_Load>Cargar</VRF_Settings_Load>
+  <VRF_Preset_Exported>Preset exportado a: {0}</VRF_Preset_Exported>
+  <VRF_Preset_ExportFailed>Error al exportar el preset.</VRF_Preset_ExportFailed>
+  <VRF_Preset_Imported>Preset "{0}" cargado correctamente.</VRF_Preset_Imported>
+  <VRF_Preset_ImportFailed>Error al importar el preset.</VRF_Preset_ImportFailed>
+  <VRF_Preset_InvalidFile>Formato de preset inválido.</VRF_Preset_InvalidFile>
+
+  <VRF_Settings_Optional>Opcional</VRF_Settings_Optional>
+  <VRF_Settings_PaintTitle>Pintura</VRF_Settings_PaintTitle>
+  <VRF_Settings_Paint_Default>Por defecto (color de facción)</VRF_Settings_Paint_Default>
+  <VRF_Settings_Paint_Faction>Color de facción</VRF_Settings_Paint_Faction>
+  <VRF_Settings_Paint_Fixed>Colores fijos</VRF_Settings_Paint_Fixed>
+  <VRF_Settings_Paint_Color1>Color 1</VRF_Settings_Paint_Color1>
+  <VRF_Settings_Paint_Color2>Color 2</VRF_Settings_Paint_Color2>
+  <VRF_Settings_Paint_Color3>Color 3</VRF_Settings_Paint_Color3>
+  <VRF_Settings_Paint_Pattern>Patrón / Skin</VRF_Settings_Paint_Pattern>
+  <VRF_Settings_Paint_Mode>Modo</VRF_Settings_Paint_Mode>
+  <VRF_Settings_Paint_Colors>Colores</VRF_Settings_Paint_Colors>
+
+  <VRF_Settings_Upgrades>Mejoras</VRF_Settings_Upgrades>
+  <VRF_Settings_UpgradesDesc>Añade opciones de mejoras. Se elige una al azar cuando el vehículo aparece. Las mejoras en gris requieren prerrequisitos no cumplidos.</VRF_Settings_UpgradesDesc>
+  <VRF_Settings_Upgrades_AddOption>+ Añadir opción</VRF_Settings_Upgrades_AddOption>
+  <VRF_Settings_Upgrades_Option>Opción {0}</VRF_Settings_Upgrades_Option>
+  <VRF_Settings_Upgrades_Remove>Eliminar</VRF_Settings_Upgrades_Remove>
+
+  <VRF_Settings_CopyList>Copiar</VRF_Settings_CopyList>
+  <VRF_Settings_PasteList>Pegar</VRF_Settings_PasteList>
+  <VRF_Settings_CopiedList>Lista de vehículos de "{0}" copiada al portapapeles.</VRF_Settings_CopiedList>
+  <VRF_Settings_PasteConfirm>¿Pegar la lista de vehículos de "{0}" en "{1}"? Las entradas existentes de los vehículos coincidentes serán sobreescritas.</VRF_Settings_PasteConfirm>
+  <VRF_Settings_ClearFactionConfirm>¿Restablecer toda la configuración de vehículos para la facción "{0}"? Esta acción no se puede deshacer.</VRF_Settings_ClearFactionConfirm>
+  <VRF_Settings_AutoFill>Auto-asignar</VRF_Settings_AutoFill>
+  <VRF_Settings_AutoFillConfirm>¿Auto-asignar todos los vehículos para la facción "{0}"? Esto activará todos los vehículos y calculará el poder de combate a partir de sus estadísticas (HP, blindaje, torretas, velocidad, tripulación, tamaño). Los valores existentes serán sobreescritos.</VRF_Settings_AutoFillConfirm>
+
+  <VRF_Tab_Raids>Raids</VRF_Tab_Raids>
+  <VRF_Tab_Settlements>Asentamientos</VRF_Tab_Settlements>
+  <VRF_Tab_Outposts>Puestos Avanzados</VRF_Tab_Outposts>
+  <VRF_Tab_Ambush>Emboscadas</VRF_Tab_Ambush>
+  <VRF_Tab_Hover>Config. Hover</VRF_Tab_Hover>
+
+  <VRF_Settings_FactionListDesc_Settlement>Selecciona una facción para configurar qué vehículos aparecen en sus asentamientos.</VRF_Settings_FactionListDesc_Settlement>
+  <VRF_Settings_FactionListDesc_Outpost>Selecciona una facción para configurar qué vehículos aparecen en sus puestos avanzados/misiones.</VRF_Settings_FactionListDesc_Outpost>
+  <VRF_Settings_FactionListDesc_Ambush>Selecciona una facción para configurar qué vehículos aparecen durante emboscadas.</VRF_Settings_FactionListDesc_Ambush>
+
+  <VRF_Settings_Budget>Presupuesto de spawn (puntos):</VRF_Settings_Budget>
+  <VRF_Settings_ForceSpawn>Forzar spawn (ignora presupuesto)</VRF_Settings_ForceSpawn>
+  <VRF_Settings_ForceSpawnDesc>Este vehículo siempre spawneará independientemente del presupuesto disponible. El auto-asignar ignora este indicador.</VRF_Settings_ForceSpawnDesc>
+
+  <VRF_Settings_HoverDesc>Configura las propiedades hover de vehículos que tienen componente hover. Los cambios se aplican inmediatamente al def del vehículo en memoria y se guardan en tus ajustes.</VRF_Settings_HoverDesc>
+  <VRF_Settings_NoHoverVehicles>No se encontraron vehículos con componente hover. Asegúrate de tener cargado un mod de vehículos con capacidad hover.</VRF_Settings_NoHoverVehicles>
+  <VRF_Settings_HoverReset>Restablecer</VRF_Settings_HoverReset>
+  <VRF_Settings_HoverNative>Este vehículo tiene un componente hover nativo.</VRF_Settings_HoverNative>
+  <VRF_Settings_HoverOverride>Sin hover nativo — configuración guardada como override.</VRF_Settings_HoverOverride>
+
+  <VRF_Hover_MaxTicks>Ticks máximos (aterrizaje)</VRF_Hover_MaxTicks>
+  <VRF_Hover_BaseMoveSpeed>Velocidad base (override de stat)</VRF_Hover_BaseMoveSpeed>
+  <VRF_Hover_MaxTicksVertical>Ticks máximos (vertical)</VRF_Hover_MaxTicksVertical>
+  <VRF_Hover_Altitude>Altitud hover</VRF_Hover_Altitude>
+  <VRF_Hover_ShadowOffset>Desplazamiento de sombra</VRF_Hover_ShadowOffset>
+  <VRF_Hover_BobAmount>Amplitud de oscilación</VRF_Hover_BobAmount>
+  <VRF_Hover_BobSpeed>Velocidad de oscilación</VRF_Hover_BobSpeed>
+  <VRF_Hover_MoveSpeed>Velocidad de movimiento</VRF_Hover_MoveSpeed>
+  <VRF_Hover_AngVelPropeller>Velocidad angular (hélice)</VRF_Hover_AngVelPropeller>
+
+  <VRF_Settings_HoverEnable>Activar modo hover</VRF_Settings_HoverEnable>
+  <VRF_Hover_FlightType>Tipo de vuelo</VRF_Hover_FlightType>
+  <VRF_Hover_Type_Helicopter>Helicóptero (hover)</VRF_Hover_Type_Helicopter>
+  <VRF_Hover_Type_Airplane>Aeroplano (carrera de despegue)</VRF_Hover_Type_Airplane>
+  <VRF_Hover_SectionCommon>Propiedades comunes</VRF_Hover_SectionCommon>
+  <VRF_Hover_SectionHelicopter>Propiedades de helicóptero</VRF_Hover_SectionHelicopter>
+  <VRF_Hover_SectionAirplane>Propiedades de aeroplano</VRF_Hover_SectionAirplane>
+  <VRF_Hover_MaxTicksPropeller>Ticks máximos (hélice)</VRF_Hover_MaxTicksPropeller>
+  <VRF_Hover_RotationSpeed>Velocidad de rotación</VRF_Hover_RotationSpeed>
+  <VRF_Hover_ExportPatch>Exportar como Patch XML</VRF_Hover_ExportPatch>
+  <VRF_Hover_PatchExported>Patch hover exportado a: {0}</VRF_Hover_PatchExported>
+  <VRF_Hover_PatchExportFailed>Error al exportar el patch hover.</VRF_Hover_PatchExportFailed>
+  <VRF_Tab_Config>Configuraciones</VRF_Tab_Config>
+  <VRF_Settings_EstimatorTitle>Configuración de parámetros del Auto-fill</VRF_Settings_EstimatorTitle>
+  <VRF_Settings_WeightHP>WeightHP</VRF_Settings_WeightHP>
+  <VRF_Settings_WeightArmor>WeightArmor</VRF_Settings_WeightArmor>
+  <VRF_Settings_WeightDPS>WeightDPS</VRF_Settings_WeightDPS>
+  <VRF_Settings_WeightRange>WeightRange</VRF_Settings_WeightRange>
+  <VRF_Settings_WeightSpeed>WeightSpeed</VRF_Settings_WeightSpeed>
+  <VRF_Settings_WeightDrivers>WeightDrivers</VRF_Settings_WeightDrivers>
+  <VRF_Settings_WeightGunners>WeightGunners</VRF_Settings_WeightGunners>
+  <VRF_Settings_WeightPassengers>WeightPassengers</VRF_Settings_WeightPassengers>
+  <VRF_Settings_WeightSize>WeightSize</VRF_Settings_WeightSize>
+  <VRF_Settings_AirMultiplier>AirMultiplier</VRF_Settings_AirMultiplier>
+  <VRF_Settings_AutoFillTransport>Auto-asignar vehículos de transporte (sin torretas)</VRF_Settings_AutoFillTransport>
+  <VRF_Settings_AutoFillSiegeDrop>Auto-asignar vehículos pod de asedio</VRF_Settings_AutoFillSiegeDrop>
+  <VRF_Settings_AutoFillSiegeDropDesc>Si está activado, el Auto-asignar incluirá los vehículos pod de asedio (ej. Goliath) y los marcará como isSiegeDrop automáticamente. Desactivado por defecto ya que requieren raids de llegada en caída para funcionar correctamente.</VRF_Settings_AutoFillSiegeDropDesc>
+  <VRF_Settings_SiegeDropOnly>Pods de asedio: solo en raids tipo drop</VRF_Settings_SiegeDropOnly>
+  <VRF_Settings_SiegeDropOnlyDesc>Si está activado, los vehículos marcados como pod de asedio solo aparecerán en raids que usen un modo de llegada tipo drop (CenterDrop, EdgeDrop, etc.). Se ignorarán en llegadas a pie o por el borde.</VRF_Settings_SiegeDropOnlyDesc>
+  <VRF_Settings_Save>Guardar ajustes</VRF_Settings_Save>
+  <VRF_Settings_Saved>Ajustes guardados.</VRF_Settings_Saved>
+  <VRF_Settings_Reset>Restablecer ajustes</VRF_Settings_Reset>
+  <VRF_Settings_ResetMsg>Ajustes restablecidos por defecto.</VRF_Settings_ResetMsg>
+
+  <VRF_Settings_IsSiegeDrop>Vehículo de asedio (drop)</VRF_Settings_IsSiegeDrop>
+  <VRF_Settings_IsSiegeDropDesc>Marca este vehículo como pod de asedio (como el Goliath). NO se le inyectará modo hover/helicóptero y podrá aparecer en raids con llegada en paracaídas. El Auto-asignar activa esto automáticamente en los pods de asedio detectados.</VRF_Settings_IsSiegeDropDesc>
+
+  <VRF_Strategy_DropPod>Raids de Drop Pod / Paracaídas (CenterDrop, EdgeDrop, etc.)</VRF_Strategy_DropPod>
+  <VRF_Settings_GravshipType>Gravinave (hover)</VRF_Settings_GravshipType>
+  <VRF_Settings_GravshipSpeedInfo>Velocidad calculada según los propulsores instalados</VRF_Settings_GravshipSpeedInfo>
+  <VRF_Settings_ThrusterConfigBtn>Configurar propulsores de gravinave...</VRF_Settings_ThrusterConfigBtn>
+  <VRF_Settings_ThrusterConfigTitle>Configuración de Propulsores de Gravinave</VRF_Settings_ThrusterConfigTitle>
+  <VRF_Settings_ThrusterConfigDesc>Ajusta la velocidad que aporta cada propulsor al vuelo hover. La velocidad total de la gravinave será la suma de todos sus propulsores activos.</VRF_Settings_ThrusterConfigDesc>
+  <VRF_Settings_ThrusterRange>Alcance: {0} casillas</VRF_Settings_ThrusterRange>
+  <VRF_Settings_ThrusterReset>Restablecer valores</VRF_Settings_ThrusterReset>
+
+  <VRF_ThrusterConfig_Title>Configuración de Propulsores de Gravinave</VRF_ThrusterConfig_Title>
+  <VRF_ThrusterConfig_Desc>Ajusta la velocidad que aporta cada propulsor al vuelo hover. La velocidad total de la gravinave será la suma de todos sus propulsores activos.</VRF_ThrusterConfig_Desc>
+  <VRF_ThrusterConfig_Speed>Velocidad</VRF_ThrusterConfig_Speed>
+  <VRF_ThrusterConfig_OpenButton>Configurar propulsores de gravinave...</VRF_ThrusterConfig_OpenButton>
+</LanguageData>

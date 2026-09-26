@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<TestPlan>
+  <name>Full</name>
+  <jobs>
+    <li>
+      <name>Unit Tests</name>
+      <commandLineArgs>--test</commandLineArgs>
+      <loadWithMods>
+        <li>brrainz.harmony</li>
+        <li>ludeon.rimworld</li>
+        <li>ludeon.rimworld.royalty</li>
+        <li>ludeon.rimworld.ideology</li>
+        <li>ludeon.rimworld.biotech</li>
+        <li>ludeon.rimworld.anomaly</li>
+        <li>ludeon.rimworld.odyssey</li>
+        <li>smashphil.vehicleframework</li>
+        <li>oskarpotocki.vanillafactionsexpanded.core</li>
+        <li>oskarpotocki.vanillavehiclesexpanded</li>
+        <li>samael.vehicles</li>
+      </loadWithMods>
+    </li>
+    <li>
+      <name>Save Our Ship 2</name>
+      <commandLineArgs>--smoke-test -batchmode</commandLineArgs>
+      <loadWithMods>
+        <li>brrainz.harmony</li>
+        <li>ludeon.rimworld</li>
+        <li>ludeon.rimworld.royalty</li>
+        <li>ludeon.rimworld.ideology</li>
+        <li>ludeon.rimworld.biotech</li>
+        <li>ludeon.rimworld.anomaly</li>
+        <li>ludeon.rimworld.odyssey</li>
+        <li>smashphil.vehicleframework</li>
+        <li>kentington.saveourship2</li>
+      </loadWithMods>
+    </li>
+    <li>
+      <name>Vehicle Map Framework</name>
+      <commandLineArgs>--smoke-test -batchmode</commandLineArgs>
+      <loadWithMods>
+        <li>brrainz.harmony</li>
+        <li>ludeon.rimworld</li>
+        <li>ludeon.rimworld.royalty</li>
+        <li>ludeon.rimworld.ideology</li>
+        <li>ludeon.rimworld.biotech</li>
+        <li>ludeon.rimworld.anomaly</li>
+        <li>ludeon.rimworld.odyssey</li>
+        <li>smashphil.vehicleframework</li>
+        <li>oels.vehiclemapframework</li>
+      </loadWithMods>
+    </li>
+    <li>
+      <name>Trains of the Rim</name>
+      <commandLineArgs>--smoke-test -batchmode</commandLineArgs>
+      <loadWithMods>
+        <li>brrainz.harmony</li>
+        <li>ludeon.rimworld</li>
+        <li>ludeon.rimworld.royalty</li>
+        <li>ludeon.rimworld.ideology</li>
+        <li>ludeon.rimworld.biotech</li>
+        <li>ludeon.rimworld.anomaly</li>
+        <li>ludeon.rimworld.odyssey</li>
+        <li>smashphil.vehicleframework</li>
+        <li>princeofpluto.vehicles.trains</li>
+      </loadWithMods>
+    </li>
+    <li>
+      <name>Caravan Item Selection</name>
+      <commandLineArgs>--smoke-test -batchmode</commandLineArgs>
+      <loadWithMods>
+        <li>brrainz.harmony</li>
+        <li>ludeon.rimworld</li>
+        <li>ludeon.rimworld.royalty</li>
+        <li>ludeon.rimworld.ideology</li>
+        <li>ludeon.rimworld.biotech</li>
+        <li>ludeon.rimworld.anomaly</li>
+        <li>ludeon.rimworld.odyssey</li>
+        <li>smashphil.vehicleframework</li>
+        <li>kopp.caravanitemselectionenhanced</li>
+      </loadWithMods>
+    </li>
+    <li>
+      <name>Visit Settlements</name>
+      <commandLineArgs>--smoke-test -batchmode</commandLineArgs>
+      <loadWithMods>
+        <li>brrainz.harmony</li>
+        <li>ludeon.rimworld</li>
+        <li>ludeon.rimworld.royalty</li>
+        <li>ludeon.rimworld.ideology</li>
+        <li>ludeon.rimworld.biotech</li>
+        <li>ludeon.rimworld.anomaly</li>
+        <li>ludeon.rimworld.odyssey</li>
+        <li>smashphil.vehicleframework</li>
+        <li>ninagoblin.visitsettlements</li>
+      </loadWithMods>
+    </li>
+  </jobs>
+</TestPlan>

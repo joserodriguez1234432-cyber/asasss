@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <VRF_LetterLabel_VehicleRaid>Vehicle Raid!</VRF_LetterLabel_VehicleRaid>
+  <VRF_LetterText_VehicleRaid>An armored division from {0} is attacking! They are using heavy vehicles to breach our defenses.</VRF_LetterText_VehicleRaid>
+  
+  <VRF_LetterLabel_AlliedSupport>Allied Armored Support</VRF_LetterLabel_AlliedSupport>
+  <VRF_LetterText_AlliedSupport>An armored division from {0} has arrived to support us! Their vehicles will hunt down our enemies.</VRF_LetterText_AlliedSupport>
+    <MessageVRF_VehicleAbandoned>The crew has abandoned {0} because it is no longer operational.</MessageVRF_VehicleAbandoned>
+    <MessageVRF_VehicleRetreating>{0} is retreating because only the driver remains.</MessageVRF_VehicleRetreating>
+    <MessageVRF_VehicleRetreatingLowFuel>{0} is retreating because it is low on fuel.</MessageVRF_VehicleRetreatingLowFuel>
+    <MessageVRF_VehicleRetreatingNoAmmo>{0} is retreating because it has run out of ammunition.</MessageVRF_VehicleRetreatingNoAmmo>
+    <VRF_RequestArmoredTrader>Request armored trade convoy (cost: {0} goodwill)</VRF_RequestArmoredTrader>
+    <VRF_RequestAerialTrader>Request aerial trade (cost: {0} goodwill)</VRF_RequestAerialTrader>
+    <VRF_ChooseTraderType>Choose trader type:</VRF_ChooseTraderType>
+    <VRF_TraderCargoWeight>Trader cargo weight: {0} / {1} kg</VRF_TraderCargoWeight>
+    <VRF_TraderOverweight>The trader cannot carry this much weight in their vehicles.</VRF_TraderOverweight>
+    <VRF_Vehicle>vehicle</VRF_Vehicle>
+    <VRF_Vehicles>vehicles</VRF_Vehicles>
+    <VRF_HotwireOption>Hotwire {0}</VRF_HotwireOption>
+    <VRF_HotwireOption_NeedSkill>Hotwire {0} (requires Crafting {1})</VRF_HotwireOption_NeedSkill>
+    <VRF_HotwireOption_HasOccupants>Cannot hotwire {0} (still has occupants)</VRF_HotwireOption_HasOccupants>
+    <VRF_HotwireOption_NoPath>Cannot reach {0}</VRF_HotwireOption_NoPath>
+    <VRF_HotwireSuccess>{0} has been hotwired and is now under your control.</VRF_HotwireSuccess>
+    <VRF_HotwireFail_NoVehicle>No vehicle found.</VRF_HotwireFail_NoVehicle>
+    <VRF_HotwireFail_AlreadyOwned>This vehicle is already yours.</VRF_HotwireFail_AlreadyOwned>
+    <VRF_HotwireFail_HasOccupants>Cannot hotwire a vehicle with occupants inside.</VRF_HotwireFail_HasOccupants>
+    <VRF_HotwireFail_SkillRequired>Crafting level {0} required to hotwire this vehicle.</VRF_HotwireFail_SkillRequired>
+    <VRF_AntiAirInterceptComponent>{0}'s {1} was destroyed by an anti-air defense system!</VRF_AntiAirInterceptComponent>
+  <VRF_Alert_HostileVehicle>Hostile vehicle nearby</VRF_Alert_HostileVehicle>
+  <VRF_Alert_HostileVehicles>Hostile vehicles nearby ({0})</VRF_Alert_HostileVehicles>
+  <VRF_Alert_HostileVehiclesDesc>One or more hostile NPC vehicles are present on the map. Click to locate them.</VRF_Alert_HostileVehiclesDesc>
+</LanguageData>

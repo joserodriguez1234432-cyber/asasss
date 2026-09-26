@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Project was exported from assembly: D:\Programas\steamapps\common\RimWorld\Mods\3014915404\1.6\Assemblies\UpdateLogTool.dll-->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8DA721A7-89C0-4666-8ECB-F8B6D5FA9F9A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>UpdateLogTool</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <ApplicationVersion>1.6.0.0</ApplicationVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="SmashTools">
+      <HintPath>lib\SmashTools.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="obj\Release\net48\PolySharp.SourceGenerators\PolySharp.SourceGenerators.PolyfillsGenerator\RefSafetyRulesAttribute.cs" />
+    <Compile Include="Parsing\DescriptionData.cs" />
+    <Compile Include="Parsing\EnhancedText.cs" />
+    <Compile Include="Parsing\FileReader.cs" />
+    <Compile Include="Parsing\SegmentParser.cs" />
+    <Compile Include="Patches.cs" />
+    <Compile Include="TaggedSegments\AnchorSegment.cs" />
+    <Compile Include="TaggedSegments\FontSegment.cs" />
+    <Compile Include="TaggedSegments\ImageBased\AnimatedSegment.cs" />
+    <Compile Include="TaggedSegments\ImageBased\ContainerSegment.cs" />
+    <Compile Include="TaggedSegments\ImageBased\GifSegment.cs" />
+    <Compile Include="TaggedSegments\ImageBased\ImageSegment.cs" />
+    <Compile Include="TaggedSegments\ImageBased\Lookup.cs" />
+    <Compile Include="TaggedSegments\NewSectionSegment.cs" />
+    <Compile Include="TaggedSegments\TaggedSegment.cs" />
+    <Compile Include="TaggedSegments\TagNames.cs" />
+    <Compile Include="TaggedSegments\TitleSegment.cs" />
+    <Compile Include="UI\Dialog_NewUpdate.cs" />
+    <Compile Include="UI\Listing_Rich.cs" />
+    <Compile Include="UpdateFor.cs" />
+    <Compile Include="UpdateHandler.cs" />
+    <Compile Include="UpdateLog.cs" />
+    <Compile Include="WebRequest\DownloadStatus.cs" />
+    <Compile Include="WebRequest\WebTexture.cs" />
+    <Compile Include="obj\Release\net48\PolySharp.SourceGenerators\PolySharp.SourceGenerators.PolyfillsGenerator\CallerArgumentExpressionAttribute.cs" />
+    <Compile Include="obj\Release\net48\PolySharp.SourceGenerators\PolySharp.SourceGenerators.PolyfillsGenerator\CollectionBuilderAttribute.cs" />
+    <Compile Include="obj\Release\net48\PolySharp.SourceGenerators\PolySharp.SourceGenerators.PolyfillsGenerator\CompilerFeatureRequiredAttribute.cs" />
+    <Compile Include="obj\Release\net48\PolySharp.SourceGenerators\PolySharp.SourceGenerators.PolyfillsGenerator\InterpolatedStringHandlerArgumentAttribute.cs" />
+    <Compile Include="obj\Release\net48\PolySharp.SourceGenerators\PolySharp.SourceGenerators.PolyfillsGenerator\InterpolatedStringHandlerAttribute.cs" />
+    <Compile Include="obj\Release\net48\PolySharp.SourceGenerators\PolySharp.SourceGenerators.PolyfillsGenerator\IsExternalInit.cs" />
+    <Compile Include="obj\Release\net48\PolySharp.SourceGenerators\PolySharp.SourceGenerators.PolyfillsGenerator\ModuleInitializerAttribute.cs" />
+    <Compile Include="obj\Release\net48\PolySharp.SourceGenerators\PolySharp.SourceGenerators.PolyfillsGenerator\OverloadResolutionPriorityAttribute.cs" />
+    <Compile Include="obj\Release\net48\PolySharp.SourceGenerators\PolySharp.SourceGenerators.PolyfillsGenerator\ParamCollectionAttribute.cs" />
+    <Compile Include="obj\Release\net48\PolySharp.SourceGenerators\PolySharp.SourceGenerators.PolyfillsGenerator\RequiredMemberAttribute.cs" />
+    <Compile Include="obj\Release\net48\PolySharp.SourceGenerators\PolySharp.SourceGenerators.PolyfillsGenerator\RequiresLocationAttribute.cs" />
+    <Compile Include="obj\Release\net48\PolySharp.SourceGenerators\PolySharp.SourceGenerators.PolyfillsGenerator\SkipLocalsInitAttribute.cs" />
+    <Compile Include="System\Runtime\Versioning\RequiresPreviewFeaturesAttribute.cs" />
+    <Compile Include="System\Diagnostics\CodeAnalysis\ConstantExpectedAttribute.cs" />
+    <Compile Include="System\Diagnostics\CodeAnalysis\ExperimentalAttribute.cs" />
+    <Compile Include="System\Diagnostics\CodeAnalysis\MemberNotNullAttribute.cs" />
+    <Compile Include="System\Diagnostics\CodeAnalysis\MemberNotNullWhenAttribute.cs" />
+    <Compile Include="System\Diagnostics\CodeAnalysis\SetsRequiredMembersAttribute.cs" />
+    <Compile Include="System\Diagnostics\CodeAnalysis\StringSyntaxAttribute.cs" />
+    <Compile Include="System\Diagnostics\CodeAnalysis\UnscopedRefAttribute.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

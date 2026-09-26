@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <VRF_LetterLabel_VehicleRaid>¡Asalto con Vehículos!</VRF_LetterLabel_VehicleRaid>
+  <VRF_LetterText_VehicleRaid>¡Una división blindada de {0} está atacando! Están usando vehículos pesados para romper nuestras defensas.</VRF_LetterText_VehicleRaid>
+  
+  <VRF_LetterLabel_AlliedSupport>Apoyo Blindado Aliado</VRF_LetterLabel_AlliedSupport>
+  <VRF_LetterText_AlliedSupport>¡Una división blindada de {0} ha llegado para apoyarnos! Sus vehículos cazarán a nuestros enemigos.</VRF_LetterText_AlliedSupport>
+  
+  <MessageVRF_VehicleAbandoned>La tripulación ha abandonado {0} porque ya no es operativo.</MessageVRF_VehicleAbandoned>
+  <MessageVRF_VehicleRetreating>{0} se está retirando porque solo queda el conductor.</MessageVRF_VehicleRetreating>
+  <MessageVRF_VehicleRetreatingLowFuel>{0} se está retirando porque le queda poco combustible.</MessageVRF_VehicleRetreatingLowFuel>
+  <MessageVRF_VehicleRetreatingNoAmmo>{0} se está retirando porque se ha quedado sin munición.</MessageVRF_VehicleRetreatingNoAmmo>
+  <VRF_RequestArmoredTrader>Solicitar convoy comercial blindado (coste: {0} de buena voluntad)</VRF_RequestArmoredTrader>
+  <VRF_RequestAerialTrader>Solicitar comercio aéreo (coste: {0} de buena voluntad)</VRF_RequestAerialTrader>
+  <VRF_ChooseTraderType>Elegir tipo de comerciante:</VRF_ChooseTraderType>
+  <VRF_TraderCargoWeight>Peso de carga del comerciante: {0} / {1} kg</VRF_TraderCargoWeight>
+  <VRF_TraderOverweight>El comerciante no puede llevar tanto peso en sus vehículos.</VRF_TraderOverweight>
+  <VRF_Vehicle>vehículo</VRF_Vehicle>
+  <VRF_Vehicles>vehículos</VRF_Vehicles>
+  <VRF_HotwireOption>Hacer puente en {0}</VRF_HotwireOption>
+  <VRF_HotwireOption_NeedSkill>Hacer puente en {0} (requiere Fabricación {1})</VRF_HotwireOption_NeedSkill>
+  <VRF_HotwireOption_HasOccupants>No se puede hacer puente en {0} (tiene ocupantes)</VRF_HotwireOption_HasOccupants>
+  <VRF_HotwireOption_NoPath>No se puede alcanzar {0}</VRF_HotwireOption_NoPath>
+  <VRF_HotwireSuccess>Se ha hecho el puente en {0} y ahora está bajo tu control.</VRF_HotwireSuccess>
+  <VRF_HotwireFail_NoVehicle>No se encontró ningún vehículo.</VRF_HotwireFail_NoVehicle>
+  <VRF_HotwireFail_AlreadyOwned>Este vehículo ya es tuyo.</VRF_HotwireFail_AlreadyOwned>
+  <VRF_HotwireFail_HasOccupants>No se puede hacer puente en un vehículo con ocupantes.</VRF_HotwireFail_HasOccupants>
+  <VRF_HotwireFail_SkillRequired>Se requiere Fabricación {0} para hacer el puente en este vehículo.</VRF_HotwireFail_SkillRequired>
+  <VRF_AntiAirInterceptComponent>¡El componente {1} de {0} fue destruido por una defensa antiaérea!</VRF_AntiAirInterceptComponent>
+
+  <VRF_Alert_HostileVehicle>Vehículo hostil cercano</VRF_Alert_HostileVehicle>
+  <VRF_Alert_HostileVehicles>Vehículos hostiles cercanos ({0})</VRF_Alert_HostileVehicles>
+  <VRF_Alert_HostileVehiclesDesc>Hay uno o más vehículos NPC hostiles en el mapa. Haz clic para localizarlos.</VRF_Alert_HostileVehiclesDesc>
+</LanguageData>

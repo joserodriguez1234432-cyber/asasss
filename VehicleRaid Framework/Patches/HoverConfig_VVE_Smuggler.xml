@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Vanilla Vehicles Expanded</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<operations>
+				<li Class="PatchOperationConditional">
+					<xpath>//Vehicles.VehicleDef[defName="VVE_Smuggler"]/vehicleStats/MoveSpeed</xpath>
+					<match Class="PatchOperationReplace">
+						<xpath>//Vehicles.VehicleDef[defName="VVE_Smuggler"]/vehicleStats/MoveSpeed</xpath>
+						<value>
+							<MoveSpeed>11.00</MoveSpeed>
+						</value>
+					</match>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>//Vehicles.VehicleDef[defName="VVE_Smuggler"]/comps</xpath>
+					<match Class="PatchOperationAdd">
+						<xpath>//Vehicles.VehicleDef[defName="VVE_Smuggler"]/comps</xpath>
+						<value>
+							<li Class="VehicleRaid.CompProperties_VehicleHover">
+								<flightType>Airplane</flightType>
+								<maxTicks>300</maxTicks>
+								<maxTicksVertical>300</maxTicksVertical>
+								<maxTicksPropeller>300</maxTicksPropeller>
+								<hoverAltitude>0.50</hoverAltitude>
+								<hoverMoveSpeed>11.00</hoverMoveSpeed>
+								<hoverShadowOffset>1.50</hoverShadowOffset>
+								<hoverRotationSpeed>45.0</hoverRotationSpeed>
+								<shadowAlphaPropellerCurve Class="SmashTools.BezierCurve">
+									<points>
+										<li>(0, 0)</li>
+										<li>(0.2, 0.4)</li>
+										<li>(0.5, 0.6)</li>
+										<li>(1, 0.6)</li>
+									</points>
+								</shadowAlphaPropellerCurve>
+								<xPositionCurve Class="SmashTools.BezierCurve">
+									<points>
+										<li>(0, 0)</li>
+										<li>(0.4, 6)</li>
+										<li>(0.7, 16)</li>
+										<li>(1, 30)</li>
+									</points>
+								</xPositionCurve>
+								<zPositionCurve Class="SmashTools.BezierCurve">
+									<points>
+										<li>(0, 0)</li>
+										<li>(0.6, 0)</li>
+										<li>(0.8, 0.2)</li>
+										<li>(1, 0.5)</li>
+									</points>
+								</zPositionCurve>
+								<rotationCurve Class="SmashTools.BezierCurve">
+									<points>
+										<li>(0, 0)</li>
+										<li>(0.7, 0)</li>
+										<li>(0.9, -15)</li>
+										<li>(1, 0)</li>
+									</points>
+								</rotationCurve>
+								<runwayClearCells>30</runwayClearCells>
+								<landingMaxTicks>600</landingMaxTicks>
+								<landingForwardCurve Class="SmashTools.BezierCurve">
+									<points>
+										<li>(0, 30)</li>
+										<li>(0.4, 20)</li>
+										<li>(0.7, 8)</li>
+										<li>(1, 0)</li>
+									</points>
+								</landingForwardCurve>
+								<landingAltitudeCurve Class="SmashTools.BezierCurve">
+									<points>
+										<li>(0, 0.5)</li>
+										<li>(0.3, 0.2)</li>
+										<li>(0.4, 0)</li>
+										<li>(1, 0)</li>
+									</points>
+								</landingAltitudeCurve>
+								<landingRotationCurve Class="SmashTools.BezierCurve">
+									<points>
+										<li>(0, 0)</li>
+										<li>(0.2, -10)</li>
+										<li>(0.4, 0)</li>
+										<li>(1, 0)</li>
+									</points>
+								</landingRotationCurve>
+							</li>
+						</value>
+					</match>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>//Vehicles.VehicleDef[defName="VVE_Smuggler"]</xpath>
+						<value>
+							<comps>
+								<li Class="VehicleRaid.CompProperties_VehicleHover">
+									<flightType>Airplane</flightType>
+									<maxTicks>300</maxTicks>
+									<maxTicksVertical>300</maxTicksVertical>
+									<maxTicksPropeller>300</maxTicksPropeller>
+									<hoverAltitude>0.50</hoverAltitude>
+									<hoverMoveSpeed>11.00</hoverMoveSpeed>
+									<hoverShadowOffset>1.50</hoverShadowOffset>
+									<hoverRotationSpeed>45.0</hoverRotationSpeed>
+									<shadowAlphaPropellerCurve Class="SmashTools.BezierCurve">
+										<points>
+											<li>(0, 0)</li>
+											<li>(0.2, 0.4)</li>
+											<li>(0.5, 0.6)</li>
+											<li>(1, 0.6)</li>
+										</points>
+									</shadowAlphaPropellerCurve>
+									<xPositionCurve Class="SmashTools.BezierCurve">
+										<points>
+											<li>(0, 0)</li>
+											<li>(0.4, 6)</li>
+											<li>(0.7, 16)</li>
+											<li>(1, 30)</li>
+										</points>
+									</xPositionCurve>
+									<zPositionCurve Class="SmashTools.BezierCurve">
+										<points>
+											<li>(0, 0)</li>
+											<li>(0.6, 0)</li>
+											<li>(0.8, 0.2)</li>
+											<li>(1, 0.5)</li>
+										</points>
+									</zPositionCurve>
+									<rotationCurve Class="SmashTools.BezierCurve">
+										<points>
+											<li>(0, 0)</li>
+											<li>(0.7, 0)</li>
+											<li>(0.9, -15)</li>
+											<li>(1, 0)</li>
+										</points>
+									</rotationCurve>
+									<runwayClearCells>30</runwayClearCells>
+									<landingMaxTicks>600</landingMaxTicks>
+									<landingForwardCurve Class="SmashTools.BezierCurve">
+										<points>
+											<li>(0, 30)</li>
+											<li>(0.4, 20)</li>
+											<li>(0.7, 8)</li>
+											<li>(1, 0)</li>
+										</points>
+									</landingForwardCurve>
+									<landingAltitudeCurve Class="SmashTools.BezierCurve">
+										<points>
+											<li>(0, 0.5)</li>
+											<li>(0.3, 0.2)</li>
+											<li>(0.4, 0)</li>
+											<li>(1, 0)</li>
+										</points>
+									</landingAltitudeCurve>
+									<landingRotationCurve Class="SmashTools.BezierCurve">
+										<points>
+											<li>(0, 0)</li>
+											<li>(0.2, -10)</li>
+											<li>(0.4, 0)</li>
+											<li>(1, 0)</li>
+										</points>
+									</landingRotationCurve>
+								</li>
+							</comps>
+						</value>
+					</nomatch>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+</Patch>

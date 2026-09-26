@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <VRF_Settings_Category>Vehicle Raid Framework</VRF_Settings_Category>
+  <VRF_Settings_Title>Vehicle Raid Framework - Natural Raid Settings</VRF_Settings_Title>
+  <VRF_Settings_Back>Back</VRF_Settings_Back>
+  <VRF_Settings_Configure>Configure</VRF_Settings_Configure>
+  <VRF_Settings_Details>Details</VRF_Settings_Details>
+  <VRF_Settings_NoFactions>No raidable factions found.</VRF_Settings_NoFactions>
+  <VRF_Settings_NoVehicles>No vehicle kinds found. Make sure Vehicle Framework and a vehicle mod are loaded.</VRF_Settings_NoVehicles>
+  <VRF_Settings_FactionListDesc>Select a faction to configure which vehicles can appear in their natural raids.</VRF_Settings_FactionListDesc>
+  <VRF_Settings_VehicleListDesc>Vehicles for faction: {0}. Check a vehicle to allow it to appear in natural raids.</VRF_Settings_VehicleListDesc>
+  <VRF_Settings_CombatPower>Combat power</VRF_Settings_CombatPower>
+  <VRF_Settings_TechLevel>Tech level: {0}</VRF_Settings_TechLevel>
+  <VRF_Settings_VehicleType>Type: {0}</VRF_Settings_VehicleType>
+  <VRF_Settings_EnableForRaids>Enable for natural raids</VRF_Settings_EnableForRaids>
+  <VRF_Settings_VehicleActive>This vehicle will appear in natural raids from this faction.</VRF_Settings_VehicleActive>
+  <VRF_Settings_VehicleInactive>This vehicle will not appear in natural raids.</VRF_Settings_VehicleInactive>
+  <VRF_Settings_MinCombatPoints>Min. narrator points to spawn</VRF_Settings_MinCombatPoints>
+  <VRF_Settings_MaxCombatPoints>Max. narrator points to spawn</VRF_Settings_MaxCombatPoints>
+  <VRF_Settings_Tip_CombatPower>Point cost the storyteller spends to include this vehicle when composing a raid. Higher values mean fewer of this type will appear in low-budget raids.</VRF_Settings_Tip_CombatPower>
+  <VRF_Settings_Tip_MinPoints>Minimum raid points required for this vehicle to be eligible. Below this threshold the storyteller will not select it.</VRF_Settings_Tip_MinPoints>
+  <VRF_Settings_Tip_MaxPoints>Upper raid point limit above which this vehicle stops appearing. Useful to prevent light vehicles from showing up in high-difficulty raids. Set to 0 for no limit.</VRF_Settings_Tip_MaxPoints>
+  <VRF_Settings_Tip_Estimator>These multipliers define how Auto-fill estimates each vehicle's combat power. The formula sums: (HP × WeightHP) + (Armor × WeightArmor) + (DPS × WeightDPS) + (Range × WeightRange) + (Speed × WeightSpeed) + (Drivers × WeightDrivers) + (Gunners × WeightGunners) + (Passengers × WeightPassengers) + (Size × WeightSize).</VRF_Settings_Tip_Estimator>
+  <VRF_Settings_Tip_AirMultiplier>Extra multiplier applied to the total estimated combat power for air vehicles (helicopters, airplanes). Increase it if air vehicles feel undervalued compared to ground ones.</VRF_Settings_Tip_AirMultiplier>
+  <VRF_Settings_Tip_Budget>Points assigned by the mod to purchase vehicles in this context. The mod will pick enabled vehicles by combat power cost until this budget is exhausted. Vehicles with 'Force spawn' are always added regardless of budget.</VRF_Settings_Tip_Budget>
+  <VRF_Settings_RaidStrategies>Raid strategies</VRF_Settings_RaidStrategies>
+  <VRF_Settings_GlobalStrategyTitle>Global raid strategy filter</VRF_Settings_GlobalStrategyTitle>
+  <VRF_Settings_GlobalStrategyBtn>Allowed raid strategies</VRF_Settings_GlobalStrategyBtn>
+  <VRF_Settings_Tip_GlobalStrategy>Controls which raid strategies can spawn vehicles globally. If a strategy is unchecked here, no vehicle will be injected into that type of raid, regardless of per-vehicle settings. Per-vehicle strategy filters apply on top of this as an additional restriction.</VRF_Settings_Tip_GlobalStrategy>
+  <VRF_Settings_GlobalStrategyHint>Unchecked strategies block all vehicles from spawning in that raid type.</VRF_Settings_GlobalStrategyHint>
+  <VRF_Settings_VehiclePointsFractionTitle>% of raid points assigned to vehicles</VRF_Settings_VehiclePointsFractionTitle>
+  <VRF_Settings_VehicleMapLimitTitle>Map vehicle limit per raid</VRF_Settings_VehicleMapLimitTitle>
+  <VRF_Settings_Tip_VehicleMapLimit>Combined maximum of gravships and other Vehicle Map Framework vehicles that the injector may spawn in one raid. Once the limit is reached, remaining points try to select enabled ordinary vehicles. Use 0 to disable map vehicles completely.</VRF_Settings_Tip_VehicleMapLimit>
+  <VRF_Settings_VehicleMapLimitWarning>Warning: high values can cause heavy lag, errors, or instability.</VRF_Settings_VehicleMapLimitWarning>
+  <VRF_Settings_AutoFillAmmoFractionTitle>% of cargo capacity filled with ammo (Auto-fill)</VRF_Settings_AutoFillAmmoFractionTitle>
+  <VRF_StrategyDialog_Title>Raid strategies — {0}</VRF_StrategyDialog_Title>
+  <VRF_StrategyDialog_Hint>Checked strategies allow this vehicle to spawn. Unchecked ones block it.</VRF_StrategyDialog_Hint>
+  <VRF_StrategyDialog_AllOn>Enable all</VRF_StrategyDialog_AllOn>
+  <VRF_StrategyDialog_AllOff>Disable all</VRF_StrategyDialog_AllOff>
+  <VRF_Settings_Turrets>Weapons / Turrets</VRF_Settings_Turrets>
+  <VRF_Settings_TurretRange>Range: {0} - {1}</VRF_Settings_TurretRange>
+  <VRF_Settings_CargoCapacity>Cargo capacity: {0} kg</VRF_Settings_CargoCapacity>
+  <VRF_Settings_CargoSection>Cargo [{0} kg]</VRF_Settings_CargoSection>
+  <VRF_Settings_Fuel>Fuel ({0}): {1}% — {2} / {3} kg</VRF_Settings_Fuel>
+  <VRF_Settings_Ammo>Ammo ({0} — {1}): {2}% — {3} units ({4} kg)</VRF_Settings_Ammo>
+  <VRF_Settings_Presets>Presets</VRF_Settings_Presets>
+  <VRF_Settings_Clear>Clear</VRF_Settings_Clear>
+  <VRF_Settings_ClearConfirm>Reset all faction vehicle settings? This cannot be undone.</VRF_Settings_ClearConfirm>
+  <VRF_Settings_AutoLoadPresets>Auto-load mod presets on startup</VRF_Settings_AutoLoadPresets>
+  <VRF_Settings_PresetExport>Export configuration</VRF_Settings_PresetExport>
+  <VRF_Settings_PresetFileName>File name:</VRF_Settings_PresetFileName>
+  <VRF_Settings_Export>Export</VRF_Settings_Export>
+  <VRF_Settings_PresetImport>Import preset</VRF_Settings_PresetImport>
+  <VRF_Settings_NoPresets>No presets found.</VRF_Settings_NoPresets>
+  <VRF_Settings_FlightMode>Flight Mode</VRF_Settings_FlightMode>
+  <VRF_Settings_FlightModeDisabled>Disabled</VRF_Settings_FlightModeDisabled>
+  <VRF_Settings_HelicopterType>Helicopter (hover)</VRF_Settings_HelicopterType>
+  <VRF_Settings_AirplaneType>Airplane (hover)</VRF_Settings_AirplaneType>
+  <VRF_Settings_HoverMoveSpeed>Hover move speed</VRF_Settings_HoverMoveSpeed>
+  <VRF_Settings_AirplaneMoveSpeed>Move speed (airplane)</VRF_Settings_AirplaneMoveSpeed>
+  <VRF_Settings_Load>Load</VRF_Settings_Load>
+  <VRF_Preset_Exported>Preset exported to: {0}</VRF_Preset_Exported>
+  <VRF_Preset_ExportFailed>Failed to export preset.</VRF_Preset_ExportFailed>
+  <VRF_Preset_Imported>Preset "{0}" loaded successfully.</VRF_Preset_Imported>
+  <VRF_Preset_ImportFailed>Failed to import preset.</VRF_Preset_ImportFailed>
+  <VRF_Preset_InvalidFile>Invalid preset file format.</VRF_Preset_InvalidFile>
+
+  <VRF_Settings_Optional>Optional</VRF_Settings_Optional>
+  <VRF_Settings_PaintTitle>Paint</VRF_Settings_PaintTitle>
+  <VRF_Settings_Paint_Default>Default (faction color)</VRF_Settings_Paint_Default>
+  <VRF_Settings_Paint_Faction>Faction color</VRF_Settings_Paint_Faction>
+  <VRF_Settings_Paint_Fixed>Fixed colors</VRF_Settings_Paint_Fixed>
+  <VRF_Settings_Paint_Color1>Color 1</VRF_Settings_Paint_Color1>
+  <VRF_Settings_Paint_Color2>Color 2</VRF_Settings_Paint_Color2>
+  <VRF_Settings_Paint_Color3>Color 3</VRF_Settings_Paint_Color3>
+  <VRF_Settings_Paint_Pattern>Pattern / Skin</VRF_Settings_Paint_Pattern>
+  <VRF_Settings_Paint_Mode>Mode</VRF_Settings_Paint_Mode>
+  <VRF_Settings_Paint_Colors>Colors</VRF_Settings_Paint_Colors>
+
+  <VRF_Settings_Upgrades>Upgrades</VRF_Settings_Upgrades>
+  <VRF_Settings_UpgradesDesc>Add upgrade options. One is chosen at random when the vehicle spawns. Grayed-out upgrades require unmet prerequisites.</VRF_Settings_UpgradesDesc>
+  <VRF_Settings_Upgrades_AddOption>+ Add option</VRF_Settings_Upgrades_AddOption>
+  <VRF_Settings_Upgrades_Option>Option {0}</VRF_Settings_Upgrades_Option>
+  <VRF_Settings_Upgrades_Remove>Remove</VRF_Settings_Upgrades_Remove>
+
+  <VRF_Settings_CopyList>Copy</VRF_Settings_CopyList>
+  <VRF_Settings_PasteList>Paste</VRF_Settings_PasteList>
+  <VRF_Settings_CopiedList>Vehicle list for "{0}" copied to clipboard.</VRF_Settings_CopiedList>
+  <VRF_Settings_PasteConfirm>Paste vehicle list from "{0}" into "{1}"? Existing entries for matching vehicles will be overwritten.</VRF_Settings_PasteConfirm>
+  <VRF_Settings_ClearFactionConfirm>Reset all vehicle settings for faction "{0}"? This cannot be undone.</VRF_Settings_ClearFactionConfirm>
+  <VRF_Settings_AutoFill>Auto-fill</VRF_Settings_AutoFill>
+  <VRF_Settings_AutoFillConfirm>Auto-fill all vehicles for faction "{0}"? This will enable every vehicle and calculate combat power from their stats (HP, armor, turrets, speed, crew, size). Existing values will be overwritten.</VRF_Settings_AutoFillConfirm>
+
+  <VRF_Tab_Raids>Raids</VRF_Tab_Raids>
+  <VRF_Tab_Settlements>Settlements</VRF_Tab_Settlements>
+  <VRF_Tab_Outposts>Outposts</VRF_Tab_Outposts>
+  <VRF_Tab_Ambush>Ambush</VRF_Tab_Ambush>
+  <VRF_Tab_Hover>Hover Config</VRF_Tab_Hover>
+
+  <VRF_Settings_FactionListDesc_Settlement>Select a faction to configure which vehicles spawn at their settlements.</VRF_Settings_FactionListDesc_Settlement>
+  <VRF_Settings_FactionListDesc_Outpost>Select a faction to configure which vehicles spawn at their outposts/mission sites.</VRF_Settings_FactionListDesc_Outpost>
+  <VRF_Settings_FactionListDesc_Ambush>Select a faction to configure which vehicles spawn during ambushes.</VRF_Settings_FactionListDesc_Ambush>
+
+  <VRF_Settings_Budget>Spawn budget (points):</VRF_Settings_Budget>
+  <VRF_Settings_ForceSpawn>Force spawn (ignores budget)</VRF_Settings_ForceSpawn>
+  <VRF_Settings_ForceSpawnDesc>This vehicle will always spawn regardless of available budget. Auto-fill ignores this flag.</VRF_Settings_ForceSpawnDesc>
+
+  <VRF_Settings_HoverDesc>Configure hover properties for vehicles that have a hover component. Changes apply immediately to the vehicle def in memory and are saved to your settings.</VRF_Settings_HoverDesc>
+  <VRF_Settings_NoHoverVehicles>No vehicles with a hover component were found. Make sure a hover-capable vehicle mod is loaded.</VRF_Settings_NoHoverVehicles>
+  <VRF_Settings_HoverReset>Reset</VRF_Settings_HoverReset>
+  <VRF_Settings_HoverNative>This vehicle has a native hover component.</VRF_Settings_HoverNative>
+  <VRF_Settings_HoverOverride>No native hover — config stored as override.</VRF_Settings_HoverOverride>
+
+  <VRF_Hover_MaxTicks>Max ticks (landing)</VRF_Hover_MaxTicks>
+  <VRF_Hover_BaseMoveSpeed>Base move speed (stat override)</VRF_Hover_BaseMoveSpeed>
+  <VRF_Hover_MaxTicksVertical>Max ticks (vertical)</VRF_Hover_MaxTicksVertical>
+  <VRF_Hover_Altitude>Hover altitude</VRF_Hover_Altitude>
+  <VRF_Hover_ShadowOffset>Shadow offset</VRF_Hover_ShadowOffset>
+  <VRF_Hover_BobAmount>Bob amount</VRF_Hover_BobAmount>
+  <VRF_Hover_BobSpeed>Bob speed</VRF_Hover_BobSpeed>
+  <VRF_Hover_MoveSpeed>Move speed</VRF_Hover_MoveSpeed>
+  <VRF_Hover_AngVelPropeller>Angular velocity (propeller)</VRF_Hover_AngVelPropeller>
+
+  <VRF_Settings_HoverEnable>Enable hover mode</VRF_Settings_HoverEnable>
+  <VRF_Hover_FlightType>Flight type</VRF_Hover_FlightType>
+  <VRF_Hover_Type_Helicopter>Helicopter (hover)</VRF_Hover_Type_Helicopter>
+  <VRF_Hover_Type_Airplane>Airplane (takeoff run)</VRF_Hover_Type_Airplane>
+  <VRF_Hover_SectionCommon>Common properties</VRF_Hover_SectionCommon>
+  <VRF_Hover_SectionHelicopter>Helicopter properties</VRF_Hover_SectionHelicopter>
+  <VRF_Hover_SectionAirplane>Airplane properties</VRF_Hover_SectionAirplane>
+  <VRF_Hover_MaxTicksPropeller>Max ticks (propeller)</VRF_Hover_MaxTicksPropeller>
+  <VRF_Hover_RotationSpeed>Rotation speed</VRF_Hover_RotationSpeed>
+  <VRF_Hover_ExportPatch>Export as Patch XML</VRF_Hover_ExportPatch>
+  <VRF_Hover_PatchExported>Hover patch exported to: {0}</VRF_Hover_PatchExported>
+  <VRF_Hover_PatchExportFailed>Failed to export hover patch.</VRF_Hover_PatchExportFailed>
+  <VRF_Tab_Config>Settings</VRF_Tab_Config>
+  <VRF_Settings_EstimatorTitle>Auto-fill Parameter Configuration</VRF_Settings_EstimatorTitle>
+  <VRF_Settings_WeightHP>WeightHP</VRF_Settings_WeightHP>
+  <VRF_Settings_WeightArmor>WeightArmor</VRF_Settings_WeightArmor>
+  <VRF_Settings_WeightDPS>WeightDPS</VRF_Settings_WeightDPS>
+  <VRF_Settings_WeightRange>WeightRange</VRF_Settings_WeightRange>
+  <VRF_Settings_WeightSpeed>WeightSpeed</VRF_Settings_WeightSpeed>
+  <VRF_Settings_WeightDrivers>WeightDrivers</VRF_Settings_WeightDrivers>
+  <VRF_Settings_WeightGunners>WeightGunners</VRF_Settings_WeightGunners>
+  <VRF_Settings_WeightPassengers>WeightPassengers</VRF_Settings_WeightPassengers>
+  <VRF_Settings_WeightSize>WeightSize</VRF_Settings_WeightSize>
+  <VRF_Settings_AirMultiplier>AirMultiplier</VRF_Settings_AirMultiplier>
+  <VRF_Settings_AutoFillTransport>Auto-fill transport vehicles (no turrets)</VRF_Settings_AutoFillTransport>
+  <VRF_Settings_AutoFillSiegeDrop>Auto-fill siege-drop pod vehicles</VRF_Settings_AutoFillSiegeDrop>
+  <VRF_Settings_AutoFillSiegeDropDesc>When enabled, Auto-fill will include siege-drop pod vehicles (e.g. Goliath) and mark them as isSiegeDrop automatically. Disabled by default since they require drop-arrival raids to work correctly.</VRF_Settings_AutoFillSiegeDropDesc>
+  <VRF_Settings_SiegeDropOnly>Siege-drop pods: drop raids only</VRF_Settings_SiegeDropOnly>
+  <VRF_Settings_SiegeDropOnlyDesc>When enabled, vehicles marked as siege-drop pods will only appear in raids that use a drop-arrival mode (CenterDrop, EdgeDrop, etc.). They will be skipped for walking or edge-walk arrivals.</VRF_Settings_SiegeDropOnlyDesc>
+  <VRF_Settings_Save>Save Settings</VRF_Settings_Save>
+  <VRF_Settings_Saved>Settings saved.</VRF_Settings_Saved>
+  <VRF_Settings_Reset>Reset Settings</VRF_Settings_Reset>
+  <VRF_Settings_ResetMsg>Settings reset to default.</VRF_Settings_ResetMsg>
+
+  <VRF_Settings_IsSiegeDrop>Siege drop vehicle</VRF_Settings_IsSiegeDrop>
+  <VRF_Settings_IsSiegeDropDesc>Mark this as a siege-drop pod (like the Goliath). It will NOT have hover/helicopter mode injected and will be allowed to spawn during drop-arrival raids. Auto-fill enables this automatically for detected siege pods.</VRF_Settings_IsSiegeDropDesc>
+
+  <VRF_Strategy_DropPod>Drop Pod Raids (CenterDrop, EdgeDrop, etc.)</VRF_Strategy_DropPod>
+  <VRF_Settings_GravshipType>Gravship (hover)</VRF_Settings_GravshipType>
+  <VRF_Settings_GravshipSpeedInfo>Speed calculated from installed thrusters</VRF_Settings_GravshipSpeedInfo>
+  <VRF_Settings_ThrusterConfigBtn>Configure Gravship Thrusters...</VRF_Settings_ThrusterConfigBtn>
+  <VRF_Settings_ThrusterConfigTitle>Gravship Thrusters Configuration</VRF_Settings_ThrusterConfigTitle>
+  <VRF_Settings_ThrusterConfigDesc>Adjust the hover speed contributed by each thruster. The total gravship speed is the sum of all active thrusters.</VRF_Settings_ThrusterConfigDesc>
+  <VRF_Settings_ThrusterRange>Range: {0} tiles</VRF_Settings_ThrusterRange>
+  <VRF_Settings_ThrusterReset>Reset to defaults</VRF_Settings_ThrusterReset>
+
+  <VRF_ThrusterConfig_Title>Gravship Thrusters Configuration</VRF_ThrusterConfig_Title>
+  <VRF_ThrusterConfig_Desc>Adjust the hover speed contributed by each thruster. The total gravship speed is the sum of all active thrusters.</VRF_ThrusterConfig_Desc>
+  <VRF_ThrusterConfig_Speed>Speed</VRF_ThrusterConfig_Speed>
+  <VRF_ThrusterConfig_OpenButton>Configure Gravship Thrusters...</VRF_ThrusterConfig_OpenButton>
+</LanguageData>

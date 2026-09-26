@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+	<ThingDef ParentName="BaseBullet">
+		<defName>VRF_HoverVehicleDummyProjectile</defName>
+		<label>aerial vehicle signature</label>
+		<thingClass>VehicleRaid.HoverVehicleProjectile</thingClass>
+		<graphicData>
+			<texPath>Things/Projectile/Bullet_Small</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+			<drawSize>(0.01,0.01)</drawSize>
+		</graphicData>
+		<projectile>
+			<speed>0</speed>
+			<flyOverhead>true</flyOverhead>
+			<damageDef>Bomb</damageDef>
+			<damageAmountBase>0</damageAmountBase>
+			<explosionRadius>1</explosionRadius>
+			<soundExplode />
+			<arcHeightFactor>0</arcHeightFactor>
+			<shadowSize>0</shadowSize>
+		</projectile>
+	</ThingDef>
+</Defs>
