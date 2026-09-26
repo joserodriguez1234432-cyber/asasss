@@ -14,8 +14,15 @@ namespace VehicleRaidFramework
         private const int TicksBetweenTargetUpdate = 60;
         private const int MaxPositionSearchCells = 300;
 
-        // Gravship-specific: orbit distance from the nearest enemy
-        private const float GravshipOrbitDistance = 15f;
+        // ── Gravship orbit state ────────────────────────────────────────────────────
+        // All tuning constants live in VRF_GravshipCombatUtility.
+        // The orbit radius is dynamic (based on interior turret ranges) and the
+        // best angle is chosen each tick to maximise the number of turrets that
+        // can fire at the current enemy.
+        private const float GravshipOrbitApproachTol = 4f; // enter-orbit dead-band (cells)
+        // Per-vehicle orbit angle (degrees, 0 = north). Multiple gravships orbit
+        // independently.
+        private static readonly Dictionary<int, float> s_orbitAngles = new Dictionary<int, float>();
 
         public override Job TryGiveJob(Pawn pawn)
         {
@@ -27,9 +34,13 @@ namespace VehicleRaidFramework
 
             if (vehicle.mindState?.duty?.def?.defName != "VRF_VehicleSearchAndDestroy") return null;
 
-            // ── Gravship behaviour ──────────────────────────────────────────────────────
-            // Face the nearest enemy and hold at GravshipOrbitDistance.
-            // No transport logic, no parachute drops, no armed-transport orbit.
+            // ── Gravship orbit behaviour ────────────────────────────────────────────
+            // Phase 1 – approach: fly to the orbit entry point closest to our current
+            //           position (tangential approach, no diving through the enemy).
+            // Phase 2 – orbit:   VRF_GravshipCombatUtility picks the orbit angle that
+            //           maximises interior turret coverage, then SetTarget is issued
+            //           OrbitWaypointLeadDeg ahead on the arc so the vehicle faces
+            //           its direction of travel.
             if (CrewManager.IsGravshipVehicle(vehicle))
             {
                 if (vehicle.IsHashIntervalTick(TicksBetweenTargetUpdate))
@@ -38,33 +49,71 @@ namespace VehicleRaidFramework
 
                     if (enemy != null)
                     {
-                        // Always face the enemy
+                        // Turrets and visual facing track the enemy directly.
                         hoverComp.facingTargetNPC   = enemy;
                         hoverComp.isFacingTargetNPC = true;
                         hoverComp.attackTarget      = enemy;
                         hoverComp.isAttackingTarget = true;
 
-                        // Reposition to GravshipOrbitDistance if too close or too far
                         Vector2 hoverPos  = hoverComp.realPos;
                         Vector2 enemyPos2 = new Vector2(enemy.DrawPos.x, enemy.DrawPos.z);
                         float   dist      = Vector2.Distance(hoverPos, enemyPos2);
+                        int     vid       = vehicle.thingIDNumber;
 
-                        float tol = 3f; // dead-band — don't micro-reposition
-                        if (Mathf.Abs(dist - GravshipOrbitDistance) > tol)
+                        // Dynamic orbit radius driven by interior turret ranges.
+                        float orbitRadius = VehicleMapFramework.VRF_GravshipCombatUtility
+                            .GetGravshipOrbitRadius(vehicle);
+
+                        if (dist > orbitRadius + GravshipOrbitApproachTol)
                         {
-                            Vector2 dir        = (enemyPos2 - hoverPos).normalized;
-                            Vector2 targetPos2 = enemyPos2 - dir * GravshipOrbitDistance;
+                            // ── Phase 1: approach ─────────────────────────────────────
+                            Vector2 toHover    = hoverPos - enemyPos2;
+                            float   entryAngle = Mathf.Atan2(toHover.x, toHover.y) * Mathf.Rad2Deg;
+                            s_orbitAngles[vid] = entryAngle;
 
-                            Map map = vehicle.Map;
-                            float mg = 4f;
-                            targetPos2.x = Mathf.Clamp(targetPos2.x, mg, map.Size.x - mg);
-                            targetPos2.y = Mathf.Clamp(targetPos2.y, mg, map.Size.z - mg);
+                            float   rad        = entryAngle * Mathf.Deg2Rad;
+                            Vector2 entryPoint = enemyPos2 + new Vector2(
+                                Mathf.Sin(rad), Mathf.Cos(rad)) * orbitRadius;
+                            entryPoint = ClampToMap(entryPoint, vehicle.Map);
+                            hoverComp.SetTarget(new Vector3(entryPoint.x, 0f, entryPoint.y));
+                        }
+                        else
+                        {
+                            // ── Phase 2: orbit ────────────────────────────────────────
+                            if (!s_orbitAngles.TryGetValue(vid, out float orbitAngle))
+                            {
+                                Vector2 toHover = hoverPos - enemyPos2;
+                                orbitAngle = Mathf.Atan2(toHover.x, toHover.y) * Mathf.Rad2Deg;
+                            }
 
-                            hoverComp.SetTarget(new Vector3(targetPos2.x, 0f, targetPos2.y));
+                            float speedScale = hoverComp.EffectiveHoverMoveSpeed;
+
+                            orbitAngle = VehicleMapFramework.VRF_GravshipCombatUtility
+                                .GetBestOrbitAngle(
+                                    vehicle,
+                                    enemyPos2,
+                                    orbitRadius,
+                                    orbitAngle,
+                                    speedScale,
+                                    TicksBetweenTargetUpdate);
+
+                            s_orbitAngles[vid] = orbitAngle;
+
+                            float leadAngle = (orbitAngle +
+                                VehicleMapFramework.VRF_GravshipCombatUtility.OrbitWaypointLeadDeg)
+                                % 360f;
+                            float leadRad = leadAngle * Mathf.Deg2Rad;
+                            Vector2 waypoint = enemyPos2 + new Vector2(
+                                Mathf.Sin(leadRad), Mathf.Cos(leadRad)) * orbitRadius;
+
+                            waypoint = ClampToMap(waypoint, vehicle.Map);
+                            hoverComp.SetTarget(new Vector3(waypoint.x, 0f, waypoint.y));
                         }
                     }
                     else
                     {
+                        // No enemy – clear orbit state and hover in place.
+                        s_orbitAngles.Remove(vehicle.thingIDNumber);
                         hoverComp.isAttackingTarget = false;
                         hoverComp.attackTarget      = LocalTargetInfo.Invalid;
                         hoverComp.isFacingTargetNPC = false;
@@ -73,7 +122,7 @@ namespace VehicleRaidFramework
                 }
                 return JobMaker.MakeJob(JobDefOf.Wait_Combat, TicksBetweenTargetUpdate, true);
             }
-            // ── End gravship behaviour ──────────────────────────────────────────────────
+            // ── End gravship orbit behaviour ────────────────────────────────────────
 
             if (vehicle.GetLord()?.CurLordToil is LordToil_VehicleHoldPosition)
             {
@@ -332,6 +381,14 @@ namespace VehicleRaidFramework
                     maxMinRange = turret.MinRange;
             }
             return maxMinRange;
+        }
+
+        private static Vector2 ClampToMap(Vector2 pos, Map map)
+        {
+            const float margin = 4f;
+            pos.x = Mathf.Clamp(pos.x, margin, map.Size.x - margin);
+            pos.y = Mathf.Clamp(pos.y, margin, map.Size.z - margin);
+            return pos;
         }
     }
 
