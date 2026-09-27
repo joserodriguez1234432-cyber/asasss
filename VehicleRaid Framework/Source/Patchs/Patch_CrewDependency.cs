@@ -67,14 +67,13 @@ namespace VehicleRaidFramework
                 // For VMF vehicles, only disembark pawns in native VF passenger slots (Passenger role).
                 // Pawns in VMF buildable-seat handlers (Dreadnought's map) are filtered out inside
                 // HandleTransportDisembark by the VehicleRoleBuildable check — they stay on the interior map.
-                if ((VRF_TransportUtil.IsTransportVehicle(__instance) || VRF_TransportUtil.IsArmedTransportVehicle(__instance)) &&
-                    VRF_TransportUtil.HasNativeVFPassengers(__instance))
+                if (VRF_TransportUtil.IsTransportVehicle(__instance) || VRF_TransportUtil.IsArmedTransportVehicle(__instance))
                 {
                     if (lord?.CurLordToil is LordToil_VehicleExitMap exitToil)
                     {
                         CheckTransportExitDuty(__instance, exitToil);
                     }
-                    else
+                    else if (VRF_TransportUtil.HasNativeVFPassengers(__instance))
                     {
                         HandleTransportDisembark(__instance);
                     }
@@ -301,7 +300,7 @@ namespace VehicleRaidFramework
             }
         }
 
-        private static void CheckTransportExitDuty(VehiclePawn vehicle, LordToil_VehicleExitMap exitToil)
+        public static void CheckTransportExitDuty(VehiclePawn vehicle, LordToil_VehicleExitMap exitToil)
         {
             if (exitToil.ExitToilStartTick >= 0 &&
                 Find.TickManager.TicksGame - exitToil.ExitToilStartTick < LordToil_VehicleExitMap.MinTicksBeforeExit)
@@ -333,6 +332,7 @@ namespace VehicleRaidFramework
                     if (p.Dead || p.Downed) continue;
                     if (!p.Spawned || p.Map != vehicle.Map) continue;
                     if (p.ParentHolder is VehicleRoleHandler) continue;
+                    if (VRF_TransportUtil.IsVehicleMap(p.Map) || VRF_TransportUtil.IsPawnOnVehicleMapOrVMF(p, vehicle)) continue;
                     if (p.Position.DistanceToSquared(vehicle.Position) > 3600) continue; // 60 * 60
                     anyInfantryOnMap = true;
                     break;

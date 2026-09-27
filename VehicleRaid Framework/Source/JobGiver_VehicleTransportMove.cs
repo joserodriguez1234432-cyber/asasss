@@ -110,6 +110,14 @@ namespace VehicleRaidFramework
                 return JobGiver_SeaVehicleMove.TryGiveSeaVehicleJob(vehicle, FindNearestVisibleEnemy(vehicle));
             }
 
+            Lord lord = vehicle.GetLord();
+            if (lord?.CurLordToil is LordToil_VehicleExitMap exitToil)
+            {
+                Patch_RaidVehicle_CrewDependency.CheckTransportExitDuty(vehicle, exitToil);
+                if (vehicle.mindState.duty?.def != VRF_AIDutyDefs.Transport)
+                    return null;
+            }
+
             if (VRF_TransportUtil.IsVehicleImmobilized(vehicle))
                 return JobMaker.MakeJob(JobDefOf.Wait_Combat, 2000, true);
 

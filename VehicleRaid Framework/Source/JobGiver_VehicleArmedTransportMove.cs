@@ -60,6 +60,14 @@ namespace VehicleRaidFramework
             if (!(pawn is VehiclePawn vehicle)) return null;
             if (!vehicle.Spawned || vehicle.Map == null) return null;
 
+            Lord lord = vehicle.GetLord();
+            if (lord?.CurLordToil is LordToil_VehicleExitMap exitToil)
+            {
+                Patch_RaidVehicle_CrewDependency.CheckTransportExitDuty(vehicle, exitToil);
+                if (vehicle.mindState.duty?.def != VRF_AIDutyDefs.ArmedTransport)
+                    return null;
+            }
+
             if (VRF_TransportUtil.IsVehicleImmobilized(vehicle))
                 return JobMaker.MakeJob(JobDefOf.Wait_Combat, 2000, true);
 

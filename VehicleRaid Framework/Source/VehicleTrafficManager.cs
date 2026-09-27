@@ -479,10 +479,11 @@ namespace VehicleRaidFramework
 
             Map map = vehicle.Map;
             var hoverComp = vehicle.GetComp<VehicleRaid.CompVehicleHover>();
-            bool isHover = hoverComp != null && (hoverComp.IsAirborne || hoverComp.State != VehicleRaid.HoverState.Grounded || hoverComp.FlightType != VehicleRaid.FlightType.Hover || hoverComp.IsGravshipEntity);
-            bool isGravship = vehicle is global::VehicleMapFramework.VehiclePawnWithMap;
+            // Only vehicles currently flying/airborne can ignore terrain and fly to an arbitrary edge cell.
+            // Ground vehicles (including ground VehiclePawnWithMap like Dreadnought) must use drivable pathing.
+            bool isAirborne = hoverComp != null && (hoverComp.IsAirborne || hoverComp.State != VehicleRaid.HoverState.Grounded);
 
-            if (isHover || isGravship)
+            if (isAirborne)
             {
                 if (CellFinder.TryFindRandomEdgeCellWith(c => !c.Fogged(map), map, CellFinder.EdgeRoadChance_Always, out exitCell))
                 {

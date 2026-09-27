@@ -546,11 +546,13 @@ namespace VehicleRaidFramework
 
         private static bool HasAllyInfantryInLord(Lord lord)
         {
+            if (lord == null || lord.Map == null) return false;
             foreach (Pawn p in lord.ownedPawns)
             {
                 if (p is VehiclePawn) continue;
                 if (p.Dead || p.Downed) continue;
-                if (!p.Spawned) continue;
+                if (!p.Spawned || p.Map != lord.Map) continue;
+                if (VRF_TransportUtil.IsVehicleMap(p.Map) || VRF_TransportUtil.IsPawnOnVehicleMapOrVMF(p)) continue;
                 if (p.ParentHolder is VehicleRoleHandler) continue;
                 return true;
             }
@@ -1534,14 +1536,31 @@ namespace VehicleRaidFramework
             IntVec3 exitCell;
             if (VehicleTrafficManager.TryFindExitCell(vehicle, out exitCell))
             {
-                if (!VehicleReachabilityCache.CanReach(vehicle, exitCell, PathEndMode.OnCell))
+                if (VehicleReachabilityCache.CanReach(vehicle, exitCell, PathEndMode.OnCell))
                 {
-                    return JobMaker.MakeJob(JobDefOf.Wait_Combat, 300, true);
+                    return CreateExitJob(exitCell);
                 }
+
+                // If candidate cell failed reachability, fallback to Vehicle Framework native best exit spot
+                if (CellFinderExtended.TryFindBestExitSpot(vehicle, out exitCell) &&
+                    VehicleReachabilityCache.CanReach(vehicle, exitCell, PathEndMode.OnCell))
+                {
+                    return CreateExitJob(exitCell);
+                }
+            }
+
+            if (CellFinderExtended.TryFindBestExitSpot(vehicle, out exitCell))
+            {
                 return CreateExitJob(exitCell);
             }
 
-            return JobMaker.MakeJob(JobDefOf.Wait_Combat, 300, true);
+            if (CellFinderExtended.TryFindRandomExitSpot(vehicle, out exitCell))
+            {
+                return CreateExitJob(exitCell);
+            }
+
+            // Breve espera para reintentar búsqueda de ruta si el camino estuvo temporalmente obstruido
+            return JobMaker.MakeJob(JobDefOf.Wait_Combat, 60, true);
         }
 
         private Job CreateExitJob(IntVec3 target)
