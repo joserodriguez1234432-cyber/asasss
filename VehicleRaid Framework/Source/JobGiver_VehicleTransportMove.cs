@@ -119,23 +119,7 @@ namespace VehicleRaidFramework
                     return JobMaker.MakeJob(JobDefOf.Wait_Combat, 60, true);
             }
 
-            bool hasPassengers = false;
-            foreach (Pawn p in vehicle.AllPawnsAboard)
-            {
-                if (p.Dead || p.Downed) continue;
-                VehicleRoleHandler h = null;
-                foreach (VehicleRoleHandler hh in vehicle.handlers)
-                {
-                    if (hh.thingOwner.Contains(p)) { h = hh; break; }
-                }
-                if (h?.role == null) continue;
-                if ((h.role.HandlingTypes & HandlingType.Movement) == 0 &&
-                    (h.role.HandlingTypes & HandlingType.Turret) == 0)
-                {
-                    hasPassengers = true;
-                    break;
-                }
-            }
+            bool hasPassengers = VRF_TransportUtil.HasNativeVFPassengers(vehicle);
 
             Thing enemy = FindNearestVisibleEnemy(vehicle);
 

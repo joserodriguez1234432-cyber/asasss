@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\Programas\\steamapps\\common\\RimWorld\\Mods\\VehicleRaid Framework\\Source\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{F31BE69F-7D27-CDF6-D362-2CE9B13F4E03}|VehicleRaidFramework.csproj|d:\\programas\\steamapps\\common\\rimworld\\mods\\vehicleraid framework\\source\\vrf_leadermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F31BE69F-7D27-CDF6-D362-2CE9B13F4E03}|VehicleRaidFramework.csproj|solutionrelative:vrf_leadermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F31BE69F-7D27-CDF6-D362-2CE9B13F4E03}|VehicleRaidFramework.csproj|d:\\programas\\steamapps\\common\\rimworld\\mods\\vehicleraid framework\\source\\patchs\\patch_vehiclenpcpathupdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F31BE69F-7D27-CDF6-D362-2CE9B13F4E03}|VehicleRaidFramework.csproj|solutionrelative:patchs\\patch_vehiclenpcpathupdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -49,10 +53,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{F31BE69F-7D27-CDF6-D362-2CE9B13F4E03}|VehicleRaidFramework.csproj|d:\\programas\\steamapps\\common\\rimworld\\mods\\vehicleraid framework\\source\\vrf_settlementvehicledef.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F31BE69F-7D27-CDF6-D362-2CE9B13F4E03}|VehicleRaidFramework.csproj|solutionrelative:vrf_settlementvehicledef.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F31BE69F-7D27-CDF6-D362-2CE9B13F4E03}|VehicleRaidFramework.csproj|d:\\programas\\steamapps\\common\\rimworld\\mods\\vehicleraid framework\\source\\vrf_leadermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F31BE69F-7D27-CDF6-D362-2CE9B13F4E03}|VehicleRaidFramework.csproj|solutionrelative:vrf_leadermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F31BE69F-7D27-CDF6-D362-2CE9B13F4E03}|VehicleRaidFramework.csproj|d:\\programas\\steamapps\\common\\rimworld\\mods\\vehicleraid framework\\source\\vrf_jobgiver_mortar.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -350,7 +350,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 45,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -362,7 +362,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "VRF_GravshipEditor.cs",
               "DocumentMoniker": "D:\\Programas\\steamapps\\common\\RimWorld\\Mods\\VehicleRaid Framework\\Source\\VehicleMapFramework\\VRF_GravshipEditor.cs",
               "RelativeDocumentMoniker": "VehicleMapFramework\\VRF_GravshipEditor.cs",
@@ -375,7 +375,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "HoverVehicleRegistry.cs",
               "DocumentMoniker": "D:\\Programas\\steamapps\\common\\RimWorld\\Mods\\VehicleRaid Framework\\Source\\HoverFlight\\HoverVehicleRegistry.cs",
               "RelativeDocumentMoniker": "HoverFlight\\HoverVehicleRegistry.cs",
@@ -387,7 +387,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "VRF_GravshipSpeedUtility.cs",
               "DocumentMoniker": "D:\\Programas\\steamapps\\common\\RimWorld\\Mods\\VehicleRaid Framework\\Source\\VehicleMapFramework\\VRF_GravshipSpeedUtility.cs",
               "RelativeDocumentMoniker": "VehicleMapFramework\\VRF_GravshipSpeedUtility.cs",
@@ -399,7 +399,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "Dialog_VRF_ThrusterConfig.cs",
               "DocumentMoniker": "D:\\Programas\\steamapps\\common\\RimWorld\\Mods\\VehicleRaid Framework\\Source\\VehicleMapFramework\\Dialog_VRF_ThrusterConfig.cs",
               "RelativeDocumentMoniker": "VehicleMapFramework\\Dialog_VRF_ThrusterConfig.cs",
@@ -411,7 +411,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "Patch_GravshipStructureProtection.cs",
               "DocumentMoniker": "D:\\Programas\\steamapps\\common\\RimWorld\\Mods\\VehicleRaid Framework\\Source\\VehicleMapFramework\\Patch_GravshipStructureProtection.cs",
               "RelativeDocumentMoniker": "VehicleMapFramework\\Patch_GravshipStructureProtection.cs",
@@ -423,7 +423,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "VRF_SiegeDropBehavior.cs",
               "DocumentMoniker": "D:\\Programas\\steamapps\\common\\RimWorld\\Mods\\VehicleRaid Framework\\Source\\VRF_SiegeDropBehavior.cs",
               "RelativeDocumentMoniker": "VRF_SiegeDropBehavior.cs",
@@ -435,15 +435,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 0,
               "Title": "VRF_LeaderManager.cs",
               "DocumentMoniker": "D:\\Programas\\steamapps\\common\\RimWorld\\Mods\\VehicleRaid Framework\\Source\\VRF_LeaderManager.cs",
               "RelativeDocumentMoniker": "VRF_LeaderManager.cs",
               "ToolTip": "D:\\Programas\\steamapps\\common\\RimWorld\\Mods\\VehicleRaid Framework\\Source\\VRF_LeaderManager.cs",
               "RelativeToolTip": "VRF_LeaderManager.cs",
-              "ViewState": "AgIAAPMAAAAAAAAAAAAAAGIAAAAnAAAAAAAAAA==",
+              "ViewState": "AgIAAJAAAAAAAAAAAAAEwKYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-15T17:04:07.823Z"
+              "WhenOpened": "2026-08-15T17:04:07.823Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -879,7 +880,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Patch_VehicleNPCPathUpdate.cs",
               "DocumentMoniker": "D:\\Programas\\steamapps\\common\\RimWorld\\Mods\\VehicleRaid Framework\\Source\\Patchs\\Patch_VehicleNPCPathUpdate.cs",
               "RelativeDocumentMoniker": "Patchs\\Patch_VehicleNPCPathUpdate.cs",
@@ -1024,7 +1025,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "Patch_DropRaidVehicleInjector.cs",
               "DocumentMoniker": "D:\\Programas\\steamapps\\common\\RimWorld\\Mods\\VehicleRaid Framework\\Source\\Patchs\\Patch_DropRaidVehicleInjector.cs",
               "RelativeDocumentMoniker": "Patchs\\Patch_DropRaidVehicleInjector.cs",
@@ -1084,7 +1085,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "HoverNPC_TransportManager.cs",
               "DocumentMoniker": "D:\\Programas\\steamapps\\common\\RimWorld\\Mods\\VehicleRaid Framework\\Source\\HoverFlight NPC\\HoverNPC_TransportManager.cs",
               "RelativeDocumentMoniker": "HoverFlight NPC\\HoverNPC_TransportManager.cs",
@@ -1120,7 +1121,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "HoverVehicleProjectile.cs",
               "DocumentMoniker": "D:\\Programas\\steamapps\\common\\RimWorld\\Mods\\VehicleRaid Framework\\Source\\HoverFlight\\HoverVehicleProjectile.cs",
               "RelativeDocumentMoniker": "HoverFlight\\HoverVehicleProjectile.cs",
@@ -1168,13 +1169,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "VehicleRaid_AI.cs",
               "DocumentMoniker": "D:\\Programas\\steamapps\\common\\RimWorld\\Mods\\VehicleRaid Framework\\Source\\VehicleRaid_AI.cs",
               "RelativeDocumentMoniker": "VehicleRaid_AI.cs",
               "ToolTip": "D:\\Programas\\steamapps\\common\\RimWorld\\Mods\\VehicleRaid Framework\\Source\\VehicleRaid_AI.cs",
               "RelativeToolTip": "VehicleRaid_AI.cs",
-              "ViewState": "AgIAALMHAAAAAAAAAAAEwMoHAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAALoHAAAAAAAAAAAEwNEHAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-23T18:40:26.04Z",
               "EditorCaption": ""
@@ -1205,7 +1206,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "VRF_SettlementVehicleDef.cs",
               "DocumentMoniker": "D:\\Programas\\steamapps\\common\\RimWorld\\Mods\\VehicleRaid Framework\\Source\\VRF_SettlementVehicleDef.cs",
               "RelativeDocumentMoniker": "VRF_SettlementVehicleDef.cs",

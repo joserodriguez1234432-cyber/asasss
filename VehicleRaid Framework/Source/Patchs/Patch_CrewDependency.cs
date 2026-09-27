@@ -64,9 +64,10 @@ namespace VehicleRaidFramework
             {
                 VehicleMapFramework.VRF_VehicleMapNpcUtility.MaintainVehicleMapCrew(vehicleWithMap);
 
-                // Only disembark if the vehicle has native Vehicle Framework passengers (NOT VMF interior map pawns or buildable seats)
-                if (!CrewManager.IsGravshipVehicle(__instance) &&
-                    (VRF_TransportUtil.IsTransportVehicle(__instance) || VRF_TransportUtil.IsArmedTransportVehicle(__instance)) &&
+                // For VMF vehicles, only disembark pawns in native VF passenger slots (Passenger role).
+                // Pawns in VMF buildable-seat handlers (Dreadnought's map) are filtered out inside
+                // HandleTransportDisembark by the VehicleRoleBuildable check — they stay on the interior map.
+                if ((VRF_TransportUtil.IsTransportVehicle(__instance) || VRF_TransportUtil.IsArmedTransportVehicle(__instance)) &&
                     VRF_TransportUtil.HasNativeVFPassengers(__instance))
                 {
                     if (lord?.CurLordToil is LordToil_VehicleExitMap exitToil)
@@ -359,7 +360,7 @@ namespace VehicleRaidFramework
         public static void HandleTransportDisembark(VehiclePawn vehicle)
         {
             if (vehicle == null || !vehicle.Spawned || vehicle.Map == null) return;
-            if (CrewManager.IsGravshipVehicle(vehicle)) return;
+            if (CrewManager.IsGravshipVehicle(vehicle) && !VRF_TransportUtil.HasNativeVFPassengers(vehicle)) return;
 
             float detectionRadius = VRF_TransportUtil.GetVehicleCombatRadius(vehicle);
             if (!VRF_TransportUtil.HasEnemy(vehicle, detectionRadius)) return;
@@ -368,16 +369,21 @@ namespace VehicleRaidFramework
                 return;
 
             bool isUnarmedTransport = VRF_TransportUtil.IsTransportVehicle(vehicle);
+            // For VMF vehicles the movement handler is occupied by an interior-map driver.
+            // Never treat movement slots as passenger slots on a VehiclePawnWithMap.
+            bool isVMFVehicle = vehicle is global::VehicleMapFramework.VehiclePawnWithMap;
 
             bool hasPawnsToDisembark = false;
             for (int i = 0; i < vehicle.handlers.Count; i++)
             {
                 var handler = vehicle.handlers[i];
                 if (handler?.role == null) continue;
-                // Exclude any seats/roles belonging to Vehicle Map Framework (buildable seats on interior map)
+                // Exclude VMF buildable-seat handlers — their pawns live on the interior map
                 if (handler.role is global::VehicleMapFramework.VehicleRoleBuildable ||
                     handler.role.GetType().Name.Contains("Buildable"))
                     continue;
+                // For VMF vehicles, never disembark the driver from a movement handler
+                if (isVMFVehicle && (handler.role.HandlingTypes & HandlingType.Movement) != 0) continue;
 
                 bool isPassengerSlot = (handler.role.HandlingTypes & HandlingType.Movement) == 0 &&
                                        (handler.role.HandlingTypes & HandlingType.Turret) == 0;
@@ -409,6 +415,8 @@ namespace VehicleRaidFramework
                 if (handler.role is global::VehicleMapFramework.VehicleRoleBuildable ||
                     handler.role.GetType().Name.Contains("Buildable"))
                     continue;
+                // For VMF vehicles, never disembark the driver from a movement handler
+                if (isVMFVehicle && (handler.role.HandlingTypes & HandlingType.Movement) != 0) continue;
 
                 bool isPassengerSlot = (handler.role.HandlingTypes & HandlingType.Movement) == 0 &&
                                        (handler.role.HandlingTypes & HandlingType.Turret) == 0;
@@ -698,10 +706,11 @@ namespace VehicleRaidFramework
         public static bool Prefix(VehiclePawn vehicle)
         {
             if (vehicle == null || vehicle.Faction == null || vehicle.Faction.IsPlayer) return true;
-            if (!(vehicle.GetLord()?.LordJob is LordJob_VehicleRaid)) return true;
 
-            // Gravships manage their own crew — never force-disembark them
-            if (CrewManager.IsGravshipVehicle(vehicle)) return false;
+            // VMF vehicles manage their own crew & map — never force-disembark them
+            if (vehicle is global::VehicleMapFramework.VehiclePawnWithMap || CrewManager.IsGravshipVehicle(vehicle)) return false;
+
+            if (!(vehicle.GetLord()?.LordJob is LordJob_VehicleRaid)) return true;
 
             if (VRF_TransportUtil.IsSiegeDropVehicle(vehicle)) return false;
 
@@ -730,7 +739,7 @@ namespace VehicleRaidFramework
             var allPawns = vehicle.AllPawnsAboard;
             foreach (Pawn p in allPawns)
             {
-                if (p != driver) tmpDriverDisembark.Add(p);
+                if (p != driver && !VRF_TransportUtil.IsPawnOnVehicleMapOrVMF(p, vehicle)) tmpDriverDisembark.Add(p);
             }
 
             for (int i = 0; i < tmpDriverDisembark.Count; i++)
@@ -738,6 +747,84 @@ namespace VehicleRaidFramework
 
             tmpDriverDisembark.Clear();
             return false;
+        }
+    }
+    [HarmonyPatch(typeof(VehiclePawn), nameof(VehiclePawn.DisembarkAll))]
+    public static class Patch_VehiclePawn_DisembarkAll_VMFGuard
+    {
+        private static readonly List<Pawn> tmpNativeDisembark = new List<Pawn>();
+
+        [HarmonyPrefix]
+        public static bool Prefix(VehiclePawn __instance)
+        {
+            if (__instance == null || !__instance.Spawned) return true;
+            if (__instance.Faction == null || __instance.Faction.IsPlayer) return true;
+
+            bool hasVMF = __instance is global::VehicleMapFramework.VehiclePawnWithMap ||
+                          (__instance.handlers != null && __instance.handlers.Any(h => VRF_TransportUtil.IsVMFSeat(h)));
+            if (!hasVMF) return true;
+
+            // ONLY disembark pawns who are NOT inside the Vehicle Map!
+            // Anyone whose map is a vehicle map, or in an interior seat, MUST NEVER disembark to the exterior map.
+            tmpNativeDisembark.Clear();
+            var pawns = __instance.AllPawnsAboard;
+            if (pawns != null)
+            {
+                for (int i = 0; i < pawns.Count; i++)
+                {
+                    Pawn p = pawns[i];
+                    if (p == null || p.Dead) continue;
+                    if (VRF_TransportUtil.IsPawnOnVehicleMapOrVMF(p, __instance)) continue;
+                    tmpNativeDisembark.Add(p);
+                }
+            }
+
+            for (int i = 0; i < tmpNativeDisembark.Count; i++)
+            {
+                __instance.DisembarkPawn(tmpNativeDisembark[i]);
+            }
+            tmpNativeDisembark.Clear();
+
+            return false;
+        }
+    }
+
+    [HarmonyPatch(typeof(VehiclePawn), nameof(VehiclePawn.DisembarkPawn))]
+    public static class Patch_VehiclePawn_DisembarkPawn_VMFGuard
+    {
+        [HarmonyPrefix]
+        public static bool Prefix(Pawn pawn, VehiclePawn __instance)
+        {
+            if (pawn == null || __instance == null) return true;
+            if (__instance.Faction == null || __instance.Faction.IsPlayer) return true;
+
+            // Strict guard: if the pawn is on ANY Vehicle Map or belongs to this vehicle's interior map,
+            // NEVER let Vehicle Framework spawn them outside onto the exterior ground map!
+            if (VRF_TransportUtil.IsPawnOnVehicleMapOrVMF(pawn, __instance))
+            {
+                // Log who is calling DisembarkPawn so we can identify the culprit
+                string stackTrace = new System.Diagnostics.StackTrace(skipFrames: 2, fNeedFileInfo: false).ToString();
+                Log.Warning($"[VRF_VMF_GUARD] BLOCKED DisembarkPawn for VMF pawn '{pawn.LabelShort}' " +
+                            $"(map={pawn.Map?.GetType()?.Name ?? "null"}, " +
+                            $"parentHolder={pawn.ParentHolder?.GetType()?.Name ?? "null"}) " +
+                            $"from vehicle '{__instance.LabelShort}' ({__instance.GetType().Name}).\n" +
+                            $"Call stack:\n{stackTrace}");
+                return false;
+            }
+
+            // Not a VMF pawn — but if the vehicle is a VehiclePawnWithMap, log it anyway
+            // so we can see who is disembarking regular-handler pawns from VMF vehicles
+            if (__instance is global::VehicleMapFramework.VehiclePawnWithMap)
+            {
+                string stackTrace = new System.Diagnostics.StackTrace(skipFrames: 2, fNeedFileInfo: false).ToString();
+                Log.Message($"[VRF_VMF_GUARD] ALLOWED DisembarkPawn for pawn '{pawn.LabelShort}' " +
+                            $"(map={pawn.Map?.GetType()?.Name ?? "null"}, " +
+                            $"parentHolder={pawn.ParentHolder?.GetType()?.Name ?? "null"}) " +
+                            $"from VMF vehicle '{__instance.LabelShort}'.\n" +
+                            $"Call stack:\n{stackTrace}");
+            }
+
+            return true;
         }
     }
 }

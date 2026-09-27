@@ -29,6 +29,7 @@ namespace VehicleRaidFramework
             if (pawn.Faction == null || pawn.Faction.IsPlayer) return;
             if (pawn is VehiclePawn) return;
             if (pawn.Map == null) return;
+            if (VRF_TransportUtil.IsVehicleMap(pawn.Map)) return;
             if (pawn.ParentHolder is VehicleRoleHandler) return;
 
             Lord lord = pawn.GetLord();

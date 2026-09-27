@@ -331,6 +331,9 @@ namespace VehicleRaidFramework
 
                 foreach (Pawn pawn in this.lord.ownedPawns)
                 {
+                    if (pawn.Map != null && VRF_TransportUtil.IsVehicleMap(pawn.Map))
+                        continue;
+
                     if (pawn is VehiclePawn v)
                     {
                         if (v.Dead || v.Destroyed)
@@ -393,6 +396,9 @@ namespace VehicleRaidFramework
                     }
                     else
                     {
+                        if (pawn.Map != null && VRF_TransportUtil.IsVehicleMap(pawn.Map))
+                            continue;
+
                         if (isStagingOrSieging)
                         {
                             if (pawn.mindState.duty?.def != DutyDefOf.Defend || pawn.mindState.duty?.focus.Cell != targetSpot)
@@ -1719,6 +1725,7 @@ namespace VehicleRaidFramework
                 foreach (Pawn pawn in this.lord.ownedPawns)
                 {
                     if (pawn.Dead || pawn.Downed) continue;
+                    if (pawn.Map != null && VRF_TransportUtil.IsVehicleMap(pawn.Map)) continue;
 
                     if (pawn is VehiclePawn v)
                     {

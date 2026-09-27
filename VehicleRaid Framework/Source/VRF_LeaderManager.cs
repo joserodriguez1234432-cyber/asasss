@@ -148,6 +148,8 @@ namespace VehicleRaidFramework
                     {
                         foreach (Pawn p in map.mapPawns.FreeHumanlikesSpawnedOfFaction(raidFaction))
                         {
+                            if (p.Map != null && VRF_TransportUtil.IsVehicleMap(p.Map))
+                                continue;
                             if (p.GetLord() == null && !p.Dead && !p.Downed)
                             {
                                 lord.AddPawn(p);

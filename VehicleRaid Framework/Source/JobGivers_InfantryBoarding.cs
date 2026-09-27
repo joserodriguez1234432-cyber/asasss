@@ -49,11 +49,22 @@ namespace VehicleRaidFramework
             return false;
         }
 
+        public static bool IsVMFSeat(VehicleRoleHandler handler)
+        {
+            if (handler?.role == null) return false;
+            return handler.role is global::VehicleMapFramework.VehicleRoleBuildable ||
+                   handler.role.GetType().Name.Contains("Buildable");
+        }
+
         public static bool IsPawnOnVehicleMapOrVMF(Pawn pawn, VehiclePawn vehicle = null)
         {
             if (pawn == null) return false;
+            // Pawn is free on an interior vehicle map (walking, manning a turret, etc.)
             if (pawn.Map != null && IsVehicleMap(pawn.Map)) return true;
+            // Pawn's map is the specific vehicle's interior map
             if (vehicle is global::VehicleMapFramework.VehiclePawnWithMap vwm && vwm.VehicleMap != null && pawn.Map == vwm.VehicleMap) return true;
+            // Pawn is seated in a VMF buildable-seat handler (VehicleRoleHandlerBuildable)
+            if (pawn.ParentHolder is global::VehicleMapFramework.VehicleRoleHandlerBuildable) return true;
             if (pawn.ParentHolder is VehicleRoleHandler h)
             {
                 if (h.role is global::VehicleMapFramework.VehicleRoleBuildable || h.role.GetType().Name.Contains("Buildable"))
@@ -627,4 +638,3 @@ namespace VehicleRaidFramework
         }
     }
 }
-
