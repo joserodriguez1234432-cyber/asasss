@@ -631,8 +631,23 @@ namespace VehicleRaid
                         return;
                     }
 
-                    Map map = __instance.Caster?.Map;
-                    if (map != null && map.roofGrid.RoofAt(root) == RoofDefOf.RoofRockThick)
+                    // Use the caster's actual spawned map (not the VMF-remapped base map).
+                    // The VMF transpiler on Building_Turret.Tick redirects Caster.Map to the
+                    // exterior map, so 'root' may contain interior coordinates that are valid
+                    // in the small interior map but out-of-bounds in the large exterior map
+                    // (or vice versa), causing RoofGrid.RoofAt to throw IndexOutOfRangeException.
+                    Thing caster = __instance.Caster;
+                    if (caster == null) return;
+
+                    // Walk up to the directly-spawned map (interior map for gravship turrets)
+                    // without going through the VMF BaseMapOrCaravan redirect.
+                    Map map = caster.Spawned ? caster.Map : null;
+                    if (map == null) return;
+
+                    // Guard: only check the roof if 'root' is within this map's bounds.
+                    if (!root.InBounds(map)) return;
+
+                    if (map.roofGrid.RoofAt(root) == RoofDefOf.RoofRockThick)
                     {
                         __result = false;
                     }
