@@ -12,6 +12,7 @@ namespace VehicleRaidFramework
     public static class Patch_InfantryAutoBoard
     {
         private const float NearEnemyRadius = VRF_TransportUtil.CombatNearRadius;
+        private static readonly Dictionary<int, int> lastCheckTicks = new Dictionary<int, int>();
 
         private static JobDef cachedBoardJobDef;
         private static JobDef cachedMountJobDef;
@@ -31,6 +32,14 @@ namespace VehicleRaidFramework
             if (pawn.Map == null) return;
             if (VRF_TransportUtil.IsVehicleMap(pawn.Map)) return;
             if (pawn.ParentHolder is VehicleRoleHandler) return;
+
+            // Throttle per pawn: check at most once every 60 ticks (1 sec) to prevent CPU spikes in DetermineNextJob
+            int currentTick = Find.TickManager.TicksGame;
+            if (lastCheckTicks.TryGetValue(pawn.thingIDNumber, out int lastTick) && currentTick - lastTick < 60)
+            {
+                return;
+            }
+            lastCheckTicks[pawn.thingIDNumber] = currentTick;
 
             Lord lord = pawn.GetLord();
             if (!(lord?.LordJob is LordJob_VehicleRaid)) return;
@@ -58,8 +67,7 @@ namespace VehicleRaidFramework
             JobDef boardJobDef = BoardJobDef;
             if (boardJobDef == null) return;
 
-            pawn.jobs?.jobQueue?.EnqueueFirst(__result.Job);
-
+            // DO NOT re-enqueue __result.Job into jobQueue; doing so piles up jobs indefinitely and causes extreme lag loops.
             vehicle.GiveLoadJob(pawn, handler);
             Job boardJob = JobMaker.MakeJob(boardJobDef, vehicle);
             boardJob.expiryInterval = 3000;

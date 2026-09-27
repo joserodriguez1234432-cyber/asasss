@@ -33,22 +33,18 @@ namespace VehicleRaidFramework.VehicleMapFramework
             if (map != null)
             {
                 // Check Vehicle Map Framework map parent
-                if (map.Parent is global::VehicleMapFramework.MapParent_Vehicle mpv)
+                if (VRF_VehicleMapCompat.IsVehicleMapParent(map.Parent))
                 {
-                    if (mpv.vehicle != null && mpv.vehicle.Faction != null && mpv.vehicle.Faction != Faction.OfPlayer)
-                    {
-                        return true;
-                    }
-                    if (mpv.Faction != null && mpv.Faction != Faction.OfPlayer)
-                    {
-                        return true;
-                    }
+                    var vehProp = map.Parent.GetType().GetProperty("vehicle") ?? map.Parent.GetType().GetProperty("Vehicle");
+                    var v = vehProp?.GetValue(map.Parent, null) as Thing;
+                    if (v != null && v.Faction != null && v.Faction != Faction.OfPlayer) return true;
+                    if (map.Parent.Faction != null && map.Parent.Faction != Faction.OfPlayer) return true;
                 }
 
                 // Check via VMF VehicleMapUtility if available
                 try
                 {
-                    if (global::VehicleMapFramework.VehicleMapUtility.IsVehicleMapOf(map, out var vehiclePawn))
+                    if (VRF_VehicleMapCompat.IsVehicleMap(map, out var vehiclePawn))
                     {
                         if (vehiclePawn != null && vehiclePawn.Faction != null && vehiclePawn.Faction != Faction.OfPlayer)
                         {
@@ -68,7 +64,7 @@ namespace VehicleRaidFramework.VehicleMapFramework
             // 3. Building has non-player faction and is on a vehicle map
             if (thing is Building b && b.Faction != null && b.Faction != Faction.OfPlayer)
             {
-                if (map != null && map.Parent is global::VehicleMapFramework.MapParent_Vehicle)
+                if (map != null && VRF_VehicleMapCompat.IsVehicleMapParent(map.Parent))
                 {
                     return true;
                 }

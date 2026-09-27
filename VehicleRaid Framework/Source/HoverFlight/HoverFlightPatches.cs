@@ -100,11 +100,14 @@ namespace VehicleRaid
         }
     }
 
-    [HarmonyPatch(typeof(global::VehicleMapFramework.VehiclePawnWithMap), nameof(global::VehicleMapFramework.VehiclePawnWithMap.DynamicDrawPhaseAt))]
+    [HarmonyPatch]
     public static class VehicleHover_VehiclePawnWithMap_DynamicDrawPhaseAt_Patch
     {
+        public static bool Prepare() => VRF_VehicleMapCompat.IsVMFActive && AccessTools.TypeByName("VehicleMapFramework.VehiclePawnWithMap") != null;
+        public static System.Reflection.MethodBase TargetMethod() => AccessTools.Method("VehicleMapFramework.VehiclePawnWithMap:DynamicDrawPhaseAt");
+
         [HarmonyPostfix]
-        public static void Postfix(global::VehicleMapFramework.VehiclePawnWithMap __instance, DrawPhase phase)
+        public static void Postfix(VehiclePawn __instance, DrawPhase phase)
         {
             if (phase == (DrawPhase)2)
             {
@@ -149,7 +152,7 @@ namespace VehicleRaid
         {
             __instance.def.altitudeLayer = __state;
 
-            if (phase == (DrawPhase)2 && !(__instance is global::VehicleMapFramework.VehiclePawnWithMap))
+            if (phase == (DrawPhase)2 && !VRF_VehicleMapCompat.IsVehicleWithMap(__instance))
             {
                 var hoverComp = __instance.GetComp<CompVehicleHover>();
                 if (hoverComp != null && hoverComp.State != HoverState.Grounded)
@@ -1218,6 +1221,8 @@ namespace VehicleRaid
     [HarmonyPatch]
     public static class Patch_VehicleMapUtility_FlipAngle
     {
+        public static bool Prepare() => AccessTools.TypeByName("VehicleMapFramework.VehicleMapUtility") != null;
+
         private static MethodBase TargetMethod()
         {
             var vmfType = AccessTools.TypeByName("VehicleMapFramework.VehicleMapUtility");
@@ -1242,6 +1247,12 @@ namespace VehicleRaid
     [HarmonyPatch]
     public static class VehicleHover_Gravship_AllowEnterExit_Patch
     {
+        public static bool Prepare()
+        {
+            var t = AccessTools.TypeByName("VehicleMapFramework.VehiclePawnWithMap");
+            return t != null && AccessTools.Method(t, "AllowEnterFor") != null;
+        }
+
         public static IEnumerable<MethodBase> TargetMethods()
         {
             Type vmfType = AccessTools.TypeByName("VehicleMapFramework.VehiclePawnWithMap");

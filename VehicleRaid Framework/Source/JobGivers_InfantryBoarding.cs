@@ -14,10 +14,10 @@ namespace VehicleRaidFramework
         public static bool IsVehicleMap(Map map)
         {
             if (map == null) return false;
-            if (map.Parent is global::VehicleMapFramework.MapParent_Vehicle) return true;
+            if (VRF_VehicleMapCompat.IsVehicleMapParent(map.Parent)) return true;
             try
             {
-                if (global::VehicleMapFramework.VehicleMapUtility.IsVehicleMapOf(map, out _)) return true;
+                if (VRF_VehicleMapCompat.IsVehicleMap(map, out _)) return true;
             }
             catch { }
             string typeName = map.Parent?.GetType()?.Name;
@@ -52,7 +52,7 @@ namespace VehicleRaidFramework
         public static bool IsVMFSeat(VehicleRoleHandler handler)
         {
             if (handler?.role == null) return false;
-            return handler.role is global::VehicleMapFramework.VehicleRoleBuildable ||
+            return VRF_VehicleMapCompat.IsVehicleRoleBuildable(handler.role) ||
                    handler.role.GetType().Name.Contains("Buildable");
         }
 
@@ -62,12 +62,12 @@ namespace VehicleRaidFramework
             // Pawn is free on an interior vehicle map (walking, manning a turret, etc.)
             if (pawn.Map != null && IsVehicleMap(pawn.Map)) return true;
             // Pawn's map is the specific vehicle's interior map
-            if (vehicle is global::VehicleMapFramework.VehiclePawnWithMap vwm && vwm.VehicleMap != null && pawn.Map == vwm.VehicleMap) return true;
+            if (VRF_VehicleMapCompat.GetInteriorVehicleMap(vehicle) != null && pawn.Map == VRF_VehicleMapCompat.GetInteriorVehicleMap(vehicle)) return true;
             // Pawn is seated in a VMF buildable-seat handler (VehicleRoleHandlerBuildable)
-            if (pawn.ParentHolder is global::VehicleMapFramework.VehicleRoleHandlerBuildable) return true;
+            if (VRF_VehicleMapCompat.IsVehicleRoleHandlerBuildable(pawn.ParentHolder)) return true;
             if (pawn.ParentHolder is VehicleRoleHandler h)
             {
-                if (h.role is global::VehicleMapFramework.VehicleRoleBuildable || h.role.GetType().Name.Contains("Buildable"))
+                if (VRF_VehicleMapCompat.IsVehicleRoleBuildable(h.role) || h.role.GetType().Name.Contains("Buildable"))
                     return true;
             }
             return false;
@@ -82,7 +82,7 @@ namespace VehicleRaidFramework
 
             if (pawn.ParentHolder is VehicleRoleHandler h && h.vehicle == vehicle)
             {
-                if (h.role is global::VehicleMapFramework.VehicleRoleBuildable || h.role.GetType().Name.Contains("Buildable"))
+                if (VRF_VehicleMapCompat.IsVehicleRoleBuildable(h.role) || h.role.GetType().Name.Contains("Buildable"))
                     return false;
                 bool isPassenger = (h.role.HandlingTypes & HandlingType.Movement) == 0 &&
                                    (h.role.HandlingTypes & HandlingType.Turret) == 0;
@@ -98,7 +98,7 @@ namespace VehicleRaidFramework
             {
                 var h = vehicle.handlers[i];
                 if (h?.role == null) continue;
-                if (h.role is global::VehicleMapFramework.VehicleRoleBuildable || h.role.GetType().Name.Contains("Buildable"))
+                if (VRF_VehicleMapCompat.IsVehicleRoleBuildable(h.role) || h.role.GetType().Name.Contains("Buildable"))
                     continue;
                 bool isPassenger = (h.role.HandlingTypes & HandlingType.Movement) == 0 &&
                                    (h.role.HandlingTypes & HandlingType.Turret) == 0;
@@ -540,7 +540,7 @@ namespace VehicleRaidFramework
             VehiclePawn vehicle = handler.vehicle;
             if (vehicle == null || !VRF_TransportUtil.IsTransportVehicle(vehicle)) return null;
 
-            if (handler.role is global::VehicleMapFramework.VehicleRoleBuildable ||
+            if (VRF_VehicleMapCompat.IsVehicleRoleBuildable(handler.role) ||
                 handler.role.GetType().Name.Contains("Buildable") ||
                 VRF_TransportUtil.IsPawnOnVehicleMapOrVMF(pawn, vehicle) ||
                 VRF_TransportUtil.IsManipulatingOrManning(pawn))

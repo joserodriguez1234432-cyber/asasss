@@ -136,8 +136,8 @@ namespace VehicleRaidFramework
             if (comp?.parent == null) return null;
             try
             {
-                if (comp.parent is global::VehicleMapFramework.VehiclePawnWithMap vwm)
-                    return vwm.VehicleMap;
+                if (comp.parent is VehiclePawn vp)
+                    return VRF_VehicleMapCompat.GetInteriorVehicleMap(vp);
             }
             catch { }
             return comp.parent.MapHeld;

@@ -492,9 +492,9 @@ namespace VehicleRaidFramework
             }
 
             // For gravships (VehiclePawnWithMap): also check the interior map crew
-            if (targetVehicle is global::VehicleMapFramework.VehiclePawnWithMap gravship)
+            Map interiorMap = VRF_VehicleMapCompat.GetInteriorVehicleMap(targetVehicle);
+            if (interiorMap != null)
             {
-                Map interiorMap = gravship.VehicleMap;
                 if (interiorMap != null)
                 {
                     foreach (Pawn pawn in interiorMap.mapPawns.AllPawnsSpawned)

@@ -65,7 +65,7 @@ namespace VehicleRaidFramework
                 {
                     if (!(p is VehiclePawn v)) continue;
                     if (v.Faction == null || v.Faction.IsPlayer || v.Dead) continue;
-                    if (v is global::VehicleMapFramework.VehiclePawnWithMap || CrewManager.IsGravshipVehicle(v)) continue;
+                    if (VRF_VehicleMapCompat.IsVehicleWithMap(v) || CrewManager.IsGravshipVehicle(v)) continue;
                     var hc = v.GetComp<CompVehicleHover>();
                     if (hc == null || hc.State != HoverState.Hovering) continue;
                     if (v.CompVehicleTurrets != null && v.CompVehicleTurrets.Turrets != null && v.CompVehicleTurrets.Turrets.Count > 0) continue;

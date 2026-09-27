@@ -22,7 +22,7 @@ namespace VehicleRaidFramework
         private static bool IsVehicleWithMap(VehicleDef vehicleDef)
         {
             return vehicleDef != null && vehicleDef.thingClass != null &&
-                typeof(global::VehicleMapFramework.VehiclePawnWithMap).IsAssignableFrom(vehicleDef.thingClass);
+                VRF_VehicleMapCompat.IsVehicleWithMapType(vehicleDef.thingClass);
         }
 
         public static bool IsDropPodArrival(IncidentParms parms)
@@ -652,13 +652,13 @@ namespace VehicleRaidFramework
                     vehiclePawns.Add(vehicle);
 
                     // Post-spawn fuel sync and faction fix for gravships
-                    if (vehicle is global::VehicleMapFramework.VehiclePawnWithMap gravshipVehicle)
+                    if (VRF_VehicleMapCompat.IsVehicleWithMap(vehicle))
                     {
                         // Re-apply faction to all interior buildings (some may reset on spawn)
-                        Faction spawnFaction = gravshipVehicle.Faction;
+                        Faction spawnFaction = vehicle.Faction;
                         if (spawnFaction != null)
                         {
-                            Map intMap = gravshipVehicle.VehicleMap;
+                            Map intMap = VRF_VehicleMapCompat.GetInteriorVehicleMap(vehicle);
                             if (intMap != null)
                             {
                                 foreach (Thing t in intMap.listerThings.AllThings.ToList())
@@ -668,8 +668,8 @@ namespace VehicleRaidFramework
                                 }
                             }
                         }
-                        VehicleRaidFramework.VehicleMapFramework.VRF_GravshipPresetUtility.SyncGravshipFuelPostSpawnPublic(gravshipVehicle);
-                        VehicleRaidFramework.VehicleMapFramework.VRF_VehicleMapNpcUtility.SpawnInteriorTurretCrew(gravshipVehicle);
+                        VehicleRaidFramework.VehicleMapFramework.VRF_GravshipPresetUtility.SyncGravshipFuelPostSpawnPublic(vehicle);
+                        VehicleRaidFramework.VehicleMapFramework.VRF_VehicleMapNpcUtility.SpawnInteriorTurretCrew(vehicle);
                     }
 
                     map.GetComponent<VRF_LeaderManager>()?.RegisterLeader(vehicle, vehiclePawns.Count - 1);

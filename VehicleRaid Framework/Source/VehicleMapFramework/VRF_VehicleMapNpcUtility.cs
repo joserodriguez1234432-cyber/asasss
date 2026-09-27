@@ -19,8 +19,8 @@ namespace VehicleRaidFramework.VehicleMapFramework
         private const float LowFuelExitPercent = 0.10f;
         private const int LoneDriverExitDelayTicks = 120;
 
-        private static readonly Dictionary<global::VehicleMapFramework.VehiclePawnWithMap, int> loneDriverSinceTick =
-            new Dictionary<global::VehicleMapFramework.VehiclePawnWithMap, int>();
+        private static readonly Dictionary<Pawn, int> loneDriverSinceTick =
+            new Dictionary<Pawn, int>();
         private static int lastLoneDriverCleanupTick;
 
         /// <summary>
@@ -30,12 +30,12 @@ namespace VehicleRaidFramework.VehicleMapFramework
         /// the game's JobDefOf.ManTurret job, while arbitrary CompMannable buildings
         /// may require a completely different job driver.
         /// </summary>
-        public static int SpawnInteriorTurretCrew(global::VehicleMapFramework.VehiclePawnWithMap vehicle)
+        public static int SpawnInteriorTurretCrew(VehiclePawn vehicle)
         {
             if (vehicle == null || vehicle.Destroyed || vehicle.Dead || vehicle.Faction == null)
                 return 0;
 
-            Map interiorMap = vehicle.VehicleMap;
+            Map interiorMap = VRF_VehicleMapCompat.GetInteriorVehicleMap(vehicle);
             if (interiorMap == null || interiorMap.Disposed)
                 return 0;
 
@@ -97,13 +97,13 @@ namespace VehicleRaidFramework.VehicleMapFramework
         /// important runtime behavior: keep a driver assigned from the interior crew and
         /// make the vehicle withdraw if only that driver remains or fuel is critically low.
         /// </summary>
-        public static void MaintainVehicleMapCrew(global::VehicleMapFramework.VehiclePawnWithMap vehicle)
+        public static void MaintainVehicleMapCrew(VehiclePawn vehicle)
         {
             if (vehicle == null || vehicle.Destroyed || vehicle.Dead || !vehicle.Spawned ||
                 vehicle.Faction == null || vehicle.Faction.IsPlayer)
                 return;
 
-            Map interiorMap = vehicle.VehicleMap;
+            Map interiorMap = VRF_VehicleMapCompat.GetInteriorVehicleMap(vehicle);
             if (interiorMap == null || interiorMap.Disposed)
                 return;
 
@@ -160,7 +160,7 @@ namespace VehicleRaidFramework.VehicleMapFramework
         /// only remaining eligible crew member.
         /// </summary>
         private static bool EnsureInteriorPawnDrives(
-            global::VehicleMapFramework.VehiclePawnWithMap vehicle,
+            VehiclePawn vehicle,
             Map interiorMap)
         {
             if (CrewManager.HasOperationalDriver(vehicle) || vehicle.handlers == null)
@@ -241,7 +241,7 @@ namespace VehicleRaidFramework.VehicleMapFramework
         }
 
         private static bool MakeMovementSlotAvailable(
-            global::VehicleMapFramework.VehiclePawnWithMap vehicle,
+            VehiclePawn vehicle,
             VehicleRoleHandler handler,
             Map interiorMap)
         {
@@ -284,7 +284,7 @@ namespace VehicleRaidFramework.VehicleMapFramework
                 out cell);
         }
 
-        private static bool ShouldLeaveForLowFuel(global::VehicleMapFramework.VehiclePawnWithMap vehicle)
+        private static bool ShouldLeaveForLowFuel(VehiclePawn vehicle)
         {
             CompFueledTravel fuel = vehicle.GetComp<CompFueledTravel>();
             if (fuel == null || fuel.Props == null || fuel.Props.ElectricPowered || fuel.FuelCapacity <= 0f)
@@ -295,7 +295,7 @@ namespace VehicleRaidFramework.VehicleMapFramework
             return fuel.FuelPercent <= LowFuelExitPercent && !CompFueledTravel.AllFuelFromInventory(vehicle).Any();
         }
 
-        private static int CountConsciousCrew(global::VehicleMapFramework.VehiclePawnWithMap vehicle, Map interiorMap)
+        private static int CountConsciousCrew(VehiclePawn vehicle, Map interiorMap)
         {
             HashSet<Pawn> crew = new HashSet<Pawn>();
             foreach (Pawn pawn in vehicle.AllPawnsAboard)
@@ -319,7 +319,7 @@ namespace VehicleRaidFramework.VehicleMapFramework
                 pawn.RaceProps.Humanlike && pawn.RaceProps.ToolUser;
         }
 
-        private static void RequestMapExit(global::VehicleMapFramework.VehiclePawnWithMap vehicle, string messageKey)
+        private static void RequestMapExit(VehiclePawn vehicle, string messageKey)
         {
             DutyDef exitDuty = VRF_AIDutyDefs.ExitMap ?? DutyDefOf.ExitMapBest;
             if (vehicle.mindState?.duty?.def == exitDuty || vehicle.mindState?.duty?.def == DutyDefOf.ExitMapBest)
@@ -337,7 +337,7 @@ namespace VehicleRaidFramework.VehicleMapFramework
             if (Find.TickManager.TicksGame < lastLoneDriverCleanupTick + 60000)
                 return;
 
-            foreach (global::VehicleMapFramework.VehiclePawnWithMap vehicle in loneDriverSinceTick.Keys
+            foreach (Pawn vehicle in loneDriverSinceTick.Keys
                          .Where(v => v == null || v.Destroyed || !v.Spawned)
                          .ToList())
             {

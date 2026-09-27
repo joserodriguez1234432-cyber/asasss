@@ -60,7 +60,7 @@ namespace VehicleRaidFramework
             // looks at vehicle handlers, so run the dedicated VMF transfer/retreat pass.
             // IMPORTANT: We do NOT return here, so that VehiclePawnWithMap participates in
             // raid Lord exit synchronization (CheckRaidLordExitSync / CheckRaidLordStartExit).
-            if (__instance is global::VehicleMapFramework.VehiclePawnWithMap vehicleWithMap)
+            if (VRF_VehicleMapCompat.IsVehicleWithMap(__instance) && __instance is VehiclePawn vehicleWithMap)
             {
                 VehicleMapFramework.VRF_VehicleMapNpcUtility.MaintainVehicleMapCrew(vehicleWithMap);
 
@@ -96,7 +96,7 @@ namespace VehicleRaidFramework
             }
             else
             {
-                CrewManager.ReassignCrew(__instance);
+                if (NeedsCrewReassignment(__instance)) CrewManager.ReassignCrew(__instance);
                 CrewManager.CheckAbandonment(__instance);
                 CrewManager.CheckRetreat(__instance);
 
@@ -140,6 +140,29 @@ namespace VehicleRaidFramework
                     }
                 }
             }
+        }
+
+        
+        private static bool NeedsCrewReassignment(VehiclePawn vehicle)
+        {
+            if (vehicle.handlers == null || vehicle.handlers.Count == 0) return false;
+            bool hasDriver = false;
+            bool hasConsciousPawns = false;
+            for (int i = 0; i < vehicle.handlers.Count; i++)
+            {
+                var h = vehicle.handlers[i];
+                if (h?.role == null) continue;
+                bool isMovement = (h.role.HandlingTypes & HandlingType.Movement) != 0;
+                for (int j = 0; j < h.thingOwner.Count; j++)
+                {
+                    if (h.thingOwner[j] is Pawn p && !p.Dead && !p.Downed)
+                    {
+                        if (isMovement) hasDriver = true;
+                        else hasConsciousPawns = true;
+                    }
+                }
+            }
+            return !hasDriver && hasConsciousPawns;
         }
 
         private static void CheckRaidLordStartExit(VehiclePawn vehicle, Lord vehLord)
@@ -615,6 +638,8 @@ namespace VehicleRaidFramework
                 {
                     if (thingList[i] is Pawn p && p != vehicle && !(p is VehiclePawn) && !IsPawnAboard(vehicle, p))
                     {
+                        // Never push or damage friendly or allied pawns (e.g. infantry boarding or disembarking)
+                        if (p.Faction == vehicle.Faction || !p.Faction.HostileTo(vehicle.Faction)) continue;
                         ResolvePawnOverlap(vehicle, p);
                     }
                 }

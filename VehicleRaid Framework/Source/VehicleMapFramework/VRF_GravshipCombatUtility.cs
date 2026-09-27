@@ -385,11 +385,9 @@ namespace VehicleRaidFramework.VehicleMapFramework
 
         private static TurretSectorCache BuildCache(VehiclePawn vehicle)
         {
-            var gravship = vehicle as global::VehicleMapFramework.VehiclePawnWithMap;
-            if (gravship?.VehicleMap?.listerThings == null)
+            Map interiorMap = VRF_VehicleMapCompat.GetInteriorVehicleMap(vehicle);
+            if (interiorMap?.listerThings == null)
                 return null;
-
-            Map interiorMap = gravship.VehicleMap;
             Vector2 mapCenter = new Vector2(
                 interiorMap.Size.x * 0.5f,
                 interiorMap.Size.z * 0.5f);

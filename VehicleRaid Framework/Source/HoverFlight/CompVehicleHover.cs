@@ -34,7 +34,7 @@ namespace VehicleRaid
         public float bobbingOffset = 0f;
 
         public FlightType FlightType => Props.flightType;
-        public bool IsGravshipEntity => FlightType == FlightType.Gravship || (Vehicle != null && (VehicleRaidFramework.CrewManager.IsGravshipVehicle(Vehicle) || Vehicle is global::VehicleMapFramework.VehiclePawnWithMap || (Vehicle.def != null && Vehicle.def.defName.IndexOf("grav", System.StringComparison.OrdinalIgnoreCase) >= 0)));
+        public bool IsGravshipEntity => FlightType == FlightType.Gravship || (Vehicle != null && (VehicleRaidFramework.CrewManager.IsGravshipVehicle(Vehicle) || VRF_VehicleMapCompat.IsVehicleWithMap(Vehicle) || (Vehicle.def != null && Vehicle.def.defName.IndexOf("grav", System.StringComparison.OrdinalIgnoreCase) >= 0)));
 
 
         public Vector2 realPos;
@@ -1596,10 +1596,10 @@ namespace VehicleRaid
             // Siempre activo en modo hover, con ligera oscilacion visual natural
             float thrustFactor = UnityEngine.Random.Range(0.9f, 1.1f);
 
-            var gravVehicle = Vehicle as global::VehicleMapFramework.VehiclePawnWithMap;
-            if (gravVehicle != null && gravVehicle.VehicleMap != null && gravVehicle.VehicleMap.listerThings != null)
+            Map interiorMap = VRF_VehicleMapCompat.GetInteriorVehicleMap(Vehicle);
+            if (interiorMap != null && interiorMap.listerThings != null)
             {
-                var things = gravVehicle.VehicleMap.listerThings.AllThings;
+                var things = interiorMap.listerThings.AllThings;
                 for (int i = 0; i < things.Count; i++)
                 {
                     Thing t = things[i];
@@ -1608,7 +1608,7 @@ namespace VehicleRaid
                         var thrusterComp = b.TryGetComp<CompGravshipThruster>();
                         if (thrusterComp != null)
                         {
-                            DrawSingleGravshipThruster(gravVehicle, b, thrusterComp, thrustFactor);
+                            DrawSingleGravshipThruster(Vehicle, b, thrusterComp, thrustFactor);
                         }
                     }
                 }
@@ -1644,7 +1644,7 @@ namespace VehicleRaid
             }
         }
 
-        private void DrawSingleGravshipThruster(global::VehicleMapFramework.VehiclePawnWithMap gravVehicle, Building b, CompGravshipThruster thrusterComp, float thrustFactor)
+        private void DrawSingleGravshipThruster(VehiclePawn gravVehicle, Building b, CompGravshipThruster thrusterComp, float thrustFactor)
         {
             CompProperties_GravshipThruster props = thrusterComp.Props;
             if (props == null) return;
@@ -1737,10 +1737,10 @@ namespace VehicleRaid
             {
                 FleckDef exhaustFleck = FleckDefOf.GravshipThrusterExhaust ?? DefDatabase<FleckDef>.GetNamedSilentFail("GravshipThrusterExhaust") ?? FleckDefOf.Smoke;
 
-                var gravVehicle = Vehicle as global::VehicleMapFramework.VehiclePawnWithMap;
-                if (gravVehicle != null && gravVehicle.VehicleMap != null && gravVehicle.VehicleMap.listerThings != null)
+                Map interiorMap = VRF_VehicleMapCompat.GetInteriorVehicleMap(Vehicle);
+                if (interiorMap != null && interiorMap.listerThings != null)
                 {
-                    var things = gravVehicle.VehicleMap.listerThings.AllThings;
+                    var things = interiorMap.listerThings.AllThings;
                     for (int i = 0; i < things.Count; i++)
                     {
                         Thing t = things[i];

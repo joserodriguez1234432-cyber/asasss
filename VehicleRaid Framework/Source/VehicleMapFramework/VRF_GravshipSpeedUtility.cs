@@ -109,36 +109,33 @@ namespace VehicleRaidFramework.VehicleMapFramework
         {
             if (vehicle == null) return DefaultFallbackSpeed;
 
-            // 1. Direct runtime check on VehicleMap (pocket map)
-            if (vehicle is global::VehicleMapFramework.VehiclePawnWithMap gravshipVehicle)
+            // 1. Direct runtime check on VehicleMap (pocket map) via compatibility layer
+            Map vehicleMap = VRF_VehicleMapCompat.GetInteriorVehicleMap(vehicle);
+            if (vehicleMap != null && vehicleMap.listerThings != null)
             {
-                Map vehicleMap = gravshipVehicle.VehicleMap;
-                if (vehicleMap != null && vehicleMap.listerThings != null)
+                float totalSpeed = 0f;
+                int thrusterCount = 0;
+
+                var allThings = vehicleMap.listerThings.AllThings;
+                for (int i = 0; i < allThings.Count; i++)
                 {
-                    float totalSpeed = 0f;
-                    int thrusterCount = 0;
-
-                    var allThings = vehicleMap.listerThings.AllThings;
-                    for (int i = 0; i < allThings.Count; i++)
+                    Thing t = allThings[i];
+                    if (t is Building b && !b.Destroyed && IsThrusterDef(b.def))
                     {
-                        Thing t = allThings[i];
-                        if (t is Building b && !b.Destroyed && IsThrusterDef(b.def))
+                        var breakdown = b.TryGetComp<CompBreakdownable>();
+                        if (breakdown != null && breakdown.BrokenDown)
                         {
-                            var breakdown = b.TryGetComp<CompBreakdownable>();
-                            if (breakdown != null && breakdown.BrokenDown)
-                            {
-                                continue;
-                            }
-
-                            totalSpeed += GetConfiguredSpeedForThruster(b.def);
-                            thrusterCount++;
+                            continue;
                         }
-                    }
 
-                    if (thrusterCount > 0 && totalSpeed > 0f)
-                    {
-                        return Mathf.Max(0.05f, Mathf.Round(totalSpeed * 100f) / 100f);
+                        totalSpeed += GetConfiguredSpeedForThruster(b.def);
+                        thrusterCount++;
                     }
+                }
+
+                if (thrusterCount > 0 && totalSpeed > 0f)
+                {
+                    return Mathf.Max(0.05f, Mathf.Round(totalSpeed * 100f) / 100f);
                 }
             }
 

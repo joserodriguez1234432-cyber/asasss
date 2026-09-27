@@ -51,7 +51,7 @@ namespace VehicleRaidFramework
             // VMF vehicles (VehiclePawnWithMap) manage their own crew via VRF_VehicleMapNpcUtility.
             // Never reassign them here — their handlers include VehicleRoleHandlerBuildable entries
             // that hold interior-map pawns, and clearing those would disembark them.
-            if (vehicle is global::VehicleMapFramework.VehiclePawnWithMap) return;
+            if (VRF_VehicleMapCompat.IsVehicleWithMap(vehicle)) return;
             if (IsGravshipVehicle(vehicle)) return;
             if (vehicle.VehicleDef.type == VehicleType.Air
                 && vehicle.GetComp<VehicleRaid.CompVehicleHover>() == null
@@ -158,7 +158,7 @@ namespace VehicleRaidFramework
             }
 
             if (vehicle == null || vehicle.Faction == null || vehicle.Faction.IsPlayer || !vehicle.Spawned) return;
-            if (vehicle is global::VehicleMapFramework.VehiclePawnWithMap) return;
+            if (VRF_VehicleMapCompat.IsVehicleWithMap(vehicle)) return;
             if (IsGravshipVehicle(vehicle)) return;
             if (vehicle.VehicleDef.type == VehicleType.Air
                 && vehicle.GetComp<VehicleRaid.CompVehicleHover>() == null
@@ -357,7 +357,7 @@ namespace VehicleRaidFramework
             if (lord?.LordJob is LordJob_VehicleTrade || lord?.LordJob is LordJob_HelicopterTrade) return;
 
             if (VRF_TransportUtil.IsSiegeDropVehicle(vehicle)) return;
-            if (vehicle is global::VehicleMapFramework.VehiclePawnWithMap) return;
+            if (VRF_VehicleMapCompat.IsVehicleWithMap(vehicle)) return;
             if (IsGravshipVehicle(vehicle)) return;
 
             var hoverComp = vehicle.GetComp<VehicleRaid.CompVehicleHover>();
@@ -412,7 +412,7 @@ namespace VehicleRaidFramework
         public static void AbandonVehicle(VehiclePawn vehicle)
         {
             if (!vehicle.Spawned || vehicle.Dead) return;
-            if (vehicle is global::VehicleMapFramework.VehiclePawnWithMap || IsGravshipVehicle(vehicle)) return;
+            if (VRF_VehicleMapCompat.IsVehicleWithMap(vehicle) || IsGravshipVehicle(vehicle)) return;
 
             var crew = vehicle.AllPawnsAboard.ToList();
             if (!crew.Any()) return;
@@ -509,8 +509,8 @@ namespace VehicleRaidFramework
             if (__instance.ParentHolder is VehicleRoleHandler handler)
             {
                 // VMF buildable-seat handlers hold interior-map pawns — never trigger ReassignCrew for them
-                if (handler is global::VehicleMapFramework.VehicleRoleHandlerBuildable) return;
-                if (handler.vehicle is global::VehicleMapFramework.VehiclePawnWithMap) return;
+                if (VRF_VehicleMapCompat.IsVehicleRoleHandlerBuildable(handler)) return;
+                if (VRF_VehicleMapCompat.IsVehicleWithMap(handler.vehicle)) return;
                 if (CrewManager.IsGravshipVehicle(handler.vehicle)) return;
                 if (handler.vehicle?.VehicleDef?.type == VehicleType.Air
                     && handler.vehicle?.GetComp<VehicleRaid.CompVehicleHover>() == null
@@ -530,8 +530,8 @@ namespace VehicleRaidFramework
             if (pawn?.ParentHolder is VehicleRoleHandler handler)
             {
                 // VMF buildable-seat handlers hold interior-map pawns — never trigger ReassignCrew for them
-                if (handler is global::VehicleMapFramework.VehicleRoleHandlerBuildable) return;
-                if (handler.vehicle is global::VehicleMapFramework.VehiclePawnWithMap) return;
+                if (VRF_VehicleMapCompat.IsVehicleRoleHandlerBuildable(handler)) return;
+                if (VRF_VehicleMapCompat.IsVehicleWithMap(handler.vehicle)) return;
                 if (CrewManager.IsGravshipVehicle(handler.vehicle)) return;
                 if (handler.vehicle?.VehicleDef?.type == VehicleType.Air
                     && handler.vehicle?.GetComp<VehicleRaid.CompVehicleHover>() == null

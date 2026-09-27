@@ -46,11 +46,14 @@ namespace VehicleRaidFramework.VehicleMapFramework
     /// Saves the interior of any non-gravship Vehicle Map Framework vehicle as a reusable
     /// structure preset. The command deliberately has no icon and is available only in God Mode.
     /// </summary>
-    [HarmonyPatch(typeof(global::VehicleMapFramework.VehiclePawnWithMap), nameof(global::VehicleMapFramework.VehiclePawnWithMap.GetGizmos))]
+    [HarmonyPatch]
     public static class Patch_VehiclePawnWithMap_StructurePresetGizmo
     {
+        public static bool Prepare() => VRF_VehicleMapCompat.IsVMFActive && AccessTools.TypeByName("VehicleMapFramework.VehiclePawnWithMap") != null;
+        public static System.Reflection.MethodBase TargetMethod() => AccessTools.Method("VehicleMapFramework.VehiclePawnWithMap:GetGizmos");
+
         [HarmonyPostfix]
-        public static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> __result, global::VehicleMapFramework.VehiclePawnWithMap __instance)
+        public static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> __result, VehiclePawn __instance)
         {
             foreach (Gizmo gizmo in __result)
                 yield return gizmo;
@@ -266,9 +269,9 @@ namespace VehicleRaidFramework.VehicleMapFramework
             }
         }
 
-        public static void SaveVehicleStructurePreset(global::VehicleMapFramework.VehiclePawnWithMap vehicle)
+        public static void SaveVehicleStructurePreset(VehiclePawn vehicle)
         {
-            if (vehicle == null || !vehicle.Spawned || vehicle.VehicleMap == null || vehicle.VehicleDef == null) return;
+            if (vehicle == null || !vehicle.Spawned || VRF_VehicleMapCompat.GetInteriorVehicleMap(vehicle) == null || vehicle.VehicleDef == null) return;
 
             try
             {
@@ -277,7 +280,7 @@ namespace VehicleRaidFramework.VehicleMapFramework
                 string presetName = vehicle.LabelShort ?? vehicleDefName;
                 string fileName = $"VehicleRaidStructureForVMF_{SanitizeFileName(vehicleDefName)}_{DateTime.Now:yyyyMMdd_HHmmss}.json";
                 string fullPath = Path.Combine(PresetsFolder, fileName);
-                Map vehicleMap = vehicle.VehicleMap;
+                Map vehicleMap = VRF_VehicleMapCompat.GetInteriorVehicleMap(vehicle);
                 var data = new VRF_GravshipPresetData
                 {
                     presetName = presetName,
@@ -392,28 +395,28 @@ namespace VehicleRaidFramework.VehicleMapFramework
         /// from that exact vehicle type.  Unlike a gravship, its map size and shape belong
         /// to the original VehicleDef, so it must never go through GravshipVehicleUtility.
         /// </summary>
-        public static global::VehicleMapFramework.VehiclePawnWithMap CreateVehicleWithMapFromPreset(
+        public static VehiclePawn CreateVehicleWithMapFromPreset(
             VRF_GravshipPresetData data,
             Faction faction,
             Vehicles.VehicleDef vehicleDef)
         {
             if (data == null || data.cells == null || data.cells.Count == 0 || vehicleDef == null ||
                 vehicleDef.thingClass == null ||
-                !typeof(global::VehicleMapFramework.VehiclePawnWithMap).IsAssignableFrom(vehicleDef.thingClass))
+                !VRF_VehicleMapCompat.IsVehicleWithMapType(vehicleDef.thingClass))
                 return null;
 
             try
             {
                 Faction targetFaction = faction ?? Faction.OfPlayer;
                 var vehiclePawn = Vehicles.VehicleSpawner.GenerateVehicle(vehicleDef, targetFaction)
-                    as global::VehicleMapFramework.VehiclePawnWithMap;
-                if (vehiclePawn == null || vehiclePawn.VehicleMap == null)
+                    as VehiclePawn;
+                if (vehiclePawn == null || VRF_VehicleMapCompat.GetInteriorVehicleMap(vehiclePawn) == null)
                 {
                     Log.Error($"[VehicleRaidFramework] Could not create VMF vehicle '{vehicleDef.defName}' for preset '{data.presetName}'.");
                     return null;
                 }
 
-                Map vehicleMap = vehiclePawn.VehicleMap;
+                Map vehicleMap = VRF_VehicleMapCompat.GetInteriorVehicleMap(vehiclePawn);
 
                 // Normal VMF presets save the native interior-map coordinates, unlike
                 // gravship designs which are re-centered into a generated bounding box.
@@ -494,7 +497,7 @@ namespace VehicleRaidFramework.VehicleMapFramework
         /// The vehicle's interior map is populated with the preset's terrain and buildings.
         /// Returns null if creation fails. The caller must GenSpawn.Spawn the result.
         /// </summary>
-        public static global::VehicleMapFramework.VehiclePawnWithMap CreateGravshipVehicleFromPreset(
+        public static VehiclePawn CreateGravshipVehicleFromPreset(
             VRF_GravshipPresetData data,
             Faction faction,
             Vehicles.VehicleDef baseDef = null)
@@ -541,7 +544,7 @@ namespace VehicleRaidFramework.VehicleMapFramework
 
                 // --- 3. Resolve base VehicleDef ---
                 Vehicles.VehicleDef resolvedBaseDef = baseDef;
-                if (resolvedBaseDef == null || !typeof(global::VehicleMapFramework.VehiclePawnWithMap).IsAssignableFrom(((ThingDef)resolvedBaseDef).thingClass))
+                if (resolvedBaseDef == null || !VRF_VehicleMapCompat.IsVehicleWithMapType(((ThingDef)resolvedBaseDef).thingClass))
                 {
                     resolvedBaseDef = DefDatabase<Vehicles.VehicleDef>.GetNamedSilentFail("VMF_GravshipVehicleBase");
                 }
@@ -552,13 +555,17 @@ namespace VehicleRaidFramework.VehicleMapFramework
                 }
 
                 // --- 4. Create VehicleMapProps_Gravship and generate a dynamic VehicleDef ---
-                var props = new global::VehicleMapFramework.VehicleMapProps_Gravship();
-                props.baseDef = resolvedBaseDef;
-                props.size = new IntVec2(sizeX, sizeZ);
-                props.offset = new UnityEngine.Vector3(0f, 0f, 0.25f);
-                props.outOfBoundsCells = outOfBounds;
+                Type propsType = AccessTools.TypeByName("VehicleMapFramework.VehicleMapProps_Gravship");
+                if (propsType == null) return null;
+                object props = Activator.CreateInstance(propsType);
+                AccessTools.Field(propsType, "baseDef")?.SetValue(props, resolvedBaseDef);
+                AccessTools.Field(propsType, "size")?.SetValue(props, new IntVec2(sizeX, sizeZ));
+                AccessTools.Field(propsType, "offset")?.SetValue(props, new UnityEngine.Vector3(0f, 0f, 0.25f));
+                AccessTools.Field(propsType, "outOfBoundsCells")?.SetValue(props, outOfBounds);
 
-                Vehicles.VehicleDef vehicleDef = global::VehicleMapFramework.GravshipVehicleUtility.GenerateGravshipVehicleDef(props);
+                Type gvuType = AccessTools.TypeByName("VehicleMapFramework.GravshipVehicleUtility");
+                var genDefMethod = AccessTools.Method(gvuType, "GenerateGravshipVehicleDef");
+                Vehicles.VehicleDef vehicleDef = genDefMethod?.Invoke(null, new object[] { props, null }) as Vehicles.VehicleDef;
                 if (vehicleDef == null)
                 {
                     Log.Error("[VehicleRaidFramework] GenerateGravshipVehicleDef returned null.");
@@ -577,7 +584,7 @@ namespace VehicleRaidFramework.VehicleMapFramework
 
                 // --- 5. Generate VehiclePawnWithMap (unspawned) ---
                 Faction targetFaction = faction ?? Faction.OfPlayer;
-                var vehiclePawn = (global::VehicleMapFramework.VehiclePawnWithMap)Vehicles.VehicleSpawner.GenerateVehicle(vehicleDef, targetFaction);
+                var vehiclePawn = Vehicles.VehicleSpawner.GenerateVehicle(vehicleDef, targetFaction);
                 if (vehiclePawn == null)
                 {
                     Log.Error("[VehicleRaidFramework] VehicleSpawner.GenerateVehicle returned null.");
@@ -585,7 +592,7 @@ namespace VehicleRaidFramework.VehicleMapFramework
                 }
 
                 // --- 6. Access interior map (triggers GenerateVehicleMap) ---
-                Map vehicleMap = vehiclePawn.VehicleMap;
+                Map vehicleMap = VRF_VehicleMapCompat.GetInteriorVehicleMap(vehiclePawn);
                 if (vehicleMap == null)
                 {
                     Log.Error("[VehicleRaidFramework] VehiclePawnWithMap.VehicleMap is null after generation.");
@@ -874,7 +881,7 @@ namespace VehicleRaidFramework.VehicleMapFramework
                         // Post-spawn: force faction on all interior buildings and sync fuel
                         if (targetFaction != null)
                         {
-                            Map intMap = vehiclePawn.VehicleMap;
+                            Map intMap = VRF_VehicleMapCompat.GetInteriorVehicleMap(vehiclePawn);
                             if (intMap != null)
                             {
                                 foreach (Thing t in intMap.listerThings.AllThings.ToList())
@@ -970,12 +977,12 @@ namespace VehicleRaidFramework.VehicleMapFramework
         /// field to match the actual engine TotalFuel (which includes VGE PipeSystem tanks).
         /// Called immediately after GenSpawn.Spawn.
         /// </summary>
-        public static void SyncGravshipFuelPostSpawnPublic(global::VehicleMapFramework.VehiclePawnWithMap vehiclePawn)
+        public static void SyncGravshipFuelPostSpawnPublic(VehiclePawn vehiclePawn)
         {
             SyncGravshipFuelPostSpawn(vehiclePawn);
         }
 
-        private static void SyncGravshipFuelPostSpawn(global::VehicleMapFramework.VehiclePawnWithMap vehiclePawn)
+        private static void SyncGravshipFuelPostSpawn(VehiclePawn vehiclePawn)
         {
             if (vehiclePawn == null) return;
             try
@@ -983,7 +990,7 @@ namespace VehicleRaidFramework.VehicleMapFramework
                 CompFueledTravel fuelComp = vehiclePawn.GetComp<CompFueledTravel>();
                 if (fuelComp == null) return;
 
-                Map vehicleMap = vehiclePawn.VehicleMap;
+                Map vehicleMap = VRF_VehicleMapCompat.GetInteriorVehicleMap(vehiclePawn);
                 if (vehicleMap == null) return;
 
                 // Sum fuel directly from all tank buildings in the interior map.
