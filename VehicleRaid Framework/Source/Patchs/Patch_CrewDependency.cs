@@ -58,13 +58,13 @@ namespace VehicleRaidFramework
             // Vehicle Map Framework keeps its spare crew inside a separate interior map.
             // Its pawns cannot be handled by the regular VehicleCrewUtility, which only
             // looks at vehicle handlers, so run the dedicated VMF transfer/retreat pass.
+            // IMPORTANT: We do NOT return here, so that VehiclePawnWithMap participates in
+            // raid Lord exit synchronization (CheckRaidLordExitSync / CheckRaidLordStartExit).
             if (__instance is global::VehicleMapFramework.VehiclePawnWithMap vehicleWithMap)
             {
                 VehicleMapFramework.VRF_VehicleMapNpcUtility.MaintainVehicleMapCrew(vehicleWithMap);
-                return;
             }
-
-            if (__instance.VehicleDef.type == VehicleType.Air && __instance.GetComp<VehicleRaid.CompVehicleHover>() == null)
+            else if (__instance.VehicleDef.type == VehicleType.Air && __instance.GetComp<VehicleRaid.CompVehicleHover>() == null)
             {
                 if (VRF_TransportUtil.IsSiegeDropVehicle(__instance))
                 {
@@ -79,20 +79,22 @@ namespace VehicleRaidFramework
                 }
                 return;
             }
-
-            CrewManager.ReassignCrew(__instance);
-            CrewManager.CheckAbandonment(__instance);
-            CrewManager.CheckRetreat(__instance);
-
-            if (VRF_TransportUtil.IsTransportVehicle(__instance) || VRF_TransportUtil.IsArmedTransportVehicle(__instance))
+            else
             {
-                if (lord?.CurLordToil is LordToil_VehicleExitMap exitToil)
+                CrewManager.ReassignCrew(__instance);
+                CrewManager.CheckAbandonment(__instance);
+                CrewManager.CheckRetreat(__instance);
+
+                if (VRF_TransportUtil.IsTransportVehicle(__instance) || VRF_TransportUtil.IsArmedTransportVehicle(__instance))
                 {
-                    CheckTransportExitDuty(__instance, exitToil);
-                }
-                else
-                {
-                    HandleTransportDisembark(__instance);
+                    if (lord?.CurLordToil is LordToil_VehicleExitMap exitToil)
+                    {
+                        CheckTransportExitDuty(__instance, exitToil);
+                    }
+                    else
+                    {
+                        HandleTransportDisembark(__instance);
+                    }
                 }
             }
 
@@ -140,7 +142,9 @@ namespace VehicleRaidFramework
                     (otherLord.LordJob is LordJob_AssaultColony ||
                      otherLord.LordJob is LordJob_DefendBase ||
                      otherLord.LordJob.GetType().Name.Contains("AssaultColony") || 
-                     otherLord.LordJob.GetType().Name.Contains("Raid"));
+                     otherLord.LordJob.GetType().Name.Contains("Raid") ||
+                     otherLord.LordJob.GetType().Name.Contains("Kidnap") ||
+                     otherLord.LordJob.GetType().Name.Contains("Steal"));
                 if (!isNaturalRaid) continue;
 
                 bool alreadyExiting = false;
@@ -208,17 +212,14 @@ namespace VehicleRaidFramework
                 if (otherLord.faction != vehLord.faction) continue;
                 if (otherLord.LordJob is LordJob_VehicleRaid) continue;
 
-                int livingActiveCount = 0;
-                List<Pawn> otherPawns = otherLord.ownedPawns;
-                for (int j = 0; j < otherPawns.Count; j++)
-                {
-                    Pawn p = otherPawns[j];
-                    if (p.Dead || p.Downed || !p.Spawned || p.Map != map) continue;
-                    if (p.ParentHolder is VehicleRoleHandler) continue;
-                    livingActiveCount++;
-                }
-
-                if (livingActiveCount == 0) continue;
+                bool isNaturalRaid = otherLord.LordJob != null && 
+                    (otherLord.LordJob is LordJob_AssaultColony ||
+                     otherLord.LordJob is LordJob_DefendBase ||
+                     otherLord.LordJob.GetType().Name.Contains("AssaultColony") || 
+                     otherLord.LordJob.GetType().Name.Contains("Raid") ||
+                     otherLord.LordJob.GetType().Name.Contains("Kidnap") ||
+                     otherLord.LordJob.GetType().Name.Contains("Steal"));
+                if (!isNaturalRaid) continue;
 
                 bool shouldExit = false;
                 LordToil curToil = otherLord.CurLordToil;
@@ -240,25 +241,39 @@ namespace VehicleRaidFramework
                     }
                 }
 
-                if (!shouldExit)
+                List<Pawn> otherPawns = otherLord.ownedPawns;
+                if (!shouldExit && otherPawns != null)
                 {
+                    int activeOnMapCount = 0;
                     for (int j = 0; j < otherPawns.Count; j++)
                     {
                         Pawn p = otherPawns[j];
-                        if (p.Dead || p.Downed || !p.Spawned || p.Map != map) continue;
-                        if (p.ParentHolder is VehicleRoleHandler) continue;
+                        if (p.Dead || p.Downed) continue;
+                        if (p.Spawned && p.Map == map && !(p.ParentHolder is VehicleRoleHandler))
+                        {
+                            activeOnMapCount++;
+                        }
+
                         DutyDef duty = p.mindState?.duty?.def;
                         if (duty != null)
                         {
                             string dName = duty.defName;
                             if (dName.Contains("Exit") || dName.Contains("Leave") ||
-                                dName.Contains("Flee") || dName == "ExitMapBest" ||
+                                dName.Contains("Flee") || dName.Contains("Kidnap") ||
+                                dName.Contains("Steal") || dName == "ExitMapBest" ||
                                 dName == "ExitMapRandom" || dName == "ExitMapNear")
                             {
                                 shouldExit = true;
                                 break;
                             }
                         }
+                    }
+
+                    // If all active pawns from the infantry raid have left the map, fled, or boarded
+                    // the vehicle map interior after kidnapping, the vehicle raid should also exit.
+                    if (!shouldExit && otherPawns.Count > 0 && activeOnMapCount == 0)
+                    {
+                        shouldExit = true;
                     }
                 }
 

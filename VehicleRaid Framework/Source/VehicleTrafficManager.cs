@@ -1,3 +1,4 @@
+using VehicleRaid;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -254,10 +255,10 @@ namespace VehicleRaidFramework
                     targetCell = groupBase + (side * lateralOffset) + (forward * -depthOffset);
                 }
 
-                IntVec3 finalCell = FindBestSpawnCell(targetCell, map, v.VehicleDef, reservedRects);
+                IntVec3 finalCell = FindBestSpawnCell(targetCell, map, v.VehicleDef, reservedRects, arrivalDirection);
 
                 result.Add(finalCell);
-                reservedRects.Add(CellRect.CenteredOn(finalCell, vSizeX, vSizeZ).ExpandedBy(MinSeparationBetweenHitboxes));
+                reservedRects.Add(GenAdj.OccupiedRect(finalCell, arrivalDirection, v.VehicleDef.Size).ExpandedBy(MinSeparationBetweenHitboxes));
             }
 
             return result;
@@ -267,12 +268,13 @@ namespace VehicleRaidFramework
 
 
 
-        private static IntVec3 FindBestSpawnCell(IntVec3 target, Map map, VehicleDef vehicleDef, List<CellRect> reservedRects)
+        private static IntVec3 FindBestSpawnCell(IntVec3 target, Map map, VehicleDef vehicleDef, List<CellRect> reservedRects, Rot4 rot = default)
         {
+            if (!rot.IsValid) rot = Rot4.North;
 
             IntVec3 clamped = GetSafeSpawnCell(target, map, vehicleDef);
 
-            if (IsVehicleAreaClear(clamped, map, vehicleDef, reservedRects))
+            if (IsVehicleAreaClear(clamped, map, vehicleDef, reservedRects, rot))
                 return clamped;
 
             Vector3 toCenterDir = (map.Center - clamped).ToVector3().normalized;
@@ -290,7 +292,7 @@ namespace VehicleRaidFramework
                 {
                     IntVec3 checkPos = clamped + (toCenter * dist) + new IntVec3(-toCenter.z * spread, 0, toCenter.x * spread);
                     checkPos = GetSafeSpawnCell(checkPos, map, vehicleDef);
-                    if (IsVehicleAreaClear(checkPos, map, vehicleDef, reservedRects))
+                    if (IsVehicleAreaClear(checkPos, map, vehicleDef, reservedRects, rot))
                         return checkPos;
                 }
             }
@@ -299,7 +301,7 @@ namespace VehicleRaidFramework
             {
                 if (!cell.InBounds(map)) continue;
                 IntVec3 safed = GetSafeSpawnCell(cell, map, vehicleDef);
-                if (IsVehicleAreaClear(safed, map, vehicleDef, reservedRects))
+                if (IsVehicleAreaClear(safed, map, vehicleDef, reservedRects, rot))
                     return safed;
             }
 
@@ -318,9 +320,10 @@ namespace VehicleRaidFramework
             return name.Contains("Deep") || name.Contains("Ocean") || name.Contains("Moving");
         }
 
-        private static bool IsVehicleAreaClear(IntVec3 center, Map map, VehicleDef vehicleDef, List<CellRect> reservedRects)
+        private static bool IsVehicleAreaClear(IntVec3 center, Map map, VehicleDef vehicleDef, List<CellRect> reservedRects, Rot4 rot = default)
         {
-            CellRect vehicleRect = CellRect.CenteredOn(center, vehicleDef.size.x, vehicleDef.size.z);
+            if (!rot.IsValid) rot = Rot4.North;
+            CellRect vehicleRect = GenAdj.OccupiedRect(center, rot, vehicleDef.Size);
             CellRect checkRect = vehicleRect.ExpandedBy(1);
 
             if (reservedRects != null)
@@ -408,11 +411,28 @@ namespace VehicleRaidFramework
 
         public static Rot4 GetBeginningOfRoadDirection(this IntVec3 cell, Map map)
         {
-            if (cell.x == 0) return Rot4.East;
-            if (cell.x == map.Size.x - 1) return Rot4.West;
-            if (cell.z == 0) return Rot4.North;
-            if (cell.z == map.Size.z - 1) return Rot4.South;
-            return Rot4.North;
+            if (map == null) return Rot4.North;
+
+            // Distancia a cada uno de los 4 bordes del mapa:
+            // x == 0 (Oeste / Izquierda)
+            // x == map.Size.x - 1 (Este / Derecha)
+            // z == 0 (Sur / Abajo)
+            // z == map.Size.z - 1 (Norte / Arriba)
+            int distWest = cell.x;
+            int distEast = map.Size.x - 1 - cell.x;
+            int distSouth = cell.z;
+            int distNorth = map.Size.z - 1 - cell.z;
+
+            int minDist = Mathf.Min(distWest, Mathf.Min(distEast, Mathf.Min(distSouth, distNorth)));
+
+            // Si aparece a la izquierda -> mira hacia la derecha (Este)
+            if (minDist == distWest) return Rot4.East;
+            // Si aparece a la derecha -> mira hacia la izquierda (Oeste)
+            if (minDist == distEast) return Rot4.West;
+            // Si aparece abajo -> mira hacia arriba (Norte)
+            if (minDist == distSouth) return Rot4.North;
+            // Si aparece arriba -> mira hacia abajo (Sur)
+            return Rot4.South;
         }
 
 
@@ -444,13 +464,39 @@ namespace VehicleRaidFramework
 
         public static bool TryFindExitCell(VehiclePawn vehicle, out IntVec3 exitCell)
         {
+            if (vehicle == null || vehicle.Map == null)
+            {
+                exitCell = IntVec3.Invalid;
+                return false;
+            }
+
+            Map map = vehicle.Map;
+            var hoverComp = vehicle.GetComp<VehicleRaid.CompVehicleHover>();
+            bool isHover = hoverComp != null && (hoverComp.IsAirborne || hoverComp.State != VehicleRaid.HoverState.Grounded || hoverComp.FlightType != VehicleRaid.FlightType.Hover || hoverComp.IsGravshipEntity);
+            bool isGravship = vehicle is global::VehicleMapFramework.VehiclePawnWithMap;
+
+            if (isHover || isGravship)
+            {
+                if (CellFinder.TryFindRandomEdgeCellWith(c => !c.Fogged(map), map, CellFinder.EdgeRoadChance_Always, out exitCell))
+                {
+                    return true;
+                }
+                exitCell = CellFinder.RandomEdgeCell(map);
+                return true;
+            }
+
             if (CellFinderExtended.TryFindBestExitSpot(vehicle, out exitCell) || CellFinderExtended.TryFindRandomExitSpot(vehicle, out exitCell))
             {
                 return true;
             }
 
-            exitCell = IntVec3.Invalid;
-            return false;
+            if (CellFinder.TryFindRandomEdgeCellWith(c => c.Standable(map) && !c.Fogged(map), map, CellFinder.EdgeRoadChance_Always, out exitCell))
+            {
+                return true;
+            }
+
+            exitCell = CellFinder.RandomEdgeCell(map);
+            return true;
         }
     }
 }

@@ -131,7 +131,7 @@ namespace VehicleRaidFramework
                 }
                 
                 groupCenters.Add(groupBase);
-                Rot4 rot = groupBase.OnEdge(map) ? groupBase.GetBeginningOfRoadDirection(map) : Rot4.North;
+                Rot4 rot = groupBase.GetBeginningOfRoadDirection(map);
 
                 List<IntVec3> formationCells = VehicleTrafficManager.CalculateFormationCells(
                     groupBase, map, rot, batch, allSpawnedCells);

@@ -477,6 +477,9 @@ namespace VehicleRaidFramework.VehicleMapFramework
                     if (thing.def.CanHaveFaction && thing.Faction != targetFaction)
                         thing.SetFaction(targetFaction);
 
+                // Inicializar baterías al 100% y repostar generadores (madera, chemfuel) y tuberías
+                InitializeInteriorPowerAndFuel(vehicleMap);
+
                 return vehiclePawn;
             }
             catch (Exception ex)
@@ -1031,6 +1034,102 @@ namespace VehicleRaidFramework.VehicleMapFramework
             {
                 Log.Warning($"[VehicleRaidFramework] SyncGravshipFuelPostSpawn failed: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Recorre las estructuras del mapa interior del vehículo y asegura que las baterías
+        /// estén al 100% y los generadores/estructuras que usan combustible (chemfuel, madera, etc.)
+        /// y tuberías de recursos queden completamente cargados al spawnear.
+        /// </summary>
+        public static void InitializeInteriorPowerAndFuel(Map vehicleMap)
+        {
+            if (vehicleMap == null || vehicleMap.listerThings == null) return;
+
+            try
+            {
+                foreach (Thing t in vehicleMap.listerThings.AllThings.ToList())
+                {
+                    if (!(t is ThingWithComps twc)) continue;
+
+                    // 1. Cargar baterías al 100%
+                    var batteryComp = twc.GetComp<CompPowerBattery>();
+                    if (batteryComp != null)
+                    {
+                        try { batteryComp.SetStoredEnergyPct(1f); } catch { }
+                    }
+
+                    // 2. Repostar generadores y contenedores de combustible (chemfuel, madera, etc.)
+                    var refuelComp = twc.GetComp<CompRefuelable>();
+                    if (refuelComp != null)
+                    {
+                        try
+                        {
+                            float cap = refuelComp.Props != null ? refuelComp.Props.fuelCapacity : 0f;
+                            if (cap > 0f)
+                            {
+                                float needed = cap - refuelComp.Fuel;
+                                if (needed > 0f)
+                                {
+                                    refuelComp.Refuel(needed);
+                                }
+                            }
+                        }
+                        catch { }
+                    }
+
+                    // 3. Tanques y almacenamiento de PipeSystem (Astrofuel, etc.)
+                    TryFillPipeStorageComp(twc);
+                }
+            }
+            catch (Exception ex)
+            {
+                VRF_Log.Msg($"[VehicleRaidFramework] Error al inicializar energía/combustible interior: {ex.Message}");
+            }
+        }
+
+        private static void TryFillPipeStorageComp(ThingWithComps twc)
+        {
+            if (twc == null || twc.AllComps == null) return;
+            try
+            {
+                foreach (var comp in twc.AllComps)
+                {
+                    if (comp.GetType().Name != "CompResourceStorage") continue;
+
+                    var compType = comp.GetType();
+                    float capacity = 0f;
+                    float stored = 0f;
+
+                    object storageProps = comp.props ?? GetPropertySafe(compType, "Props")?.GetValue(comp);
+                    if (storageProps != null)
+                    {
+                        var capProp = GetPropertySafe(storageProps.GetType(), "storageCapacity");
+                        var capField = GetFieldSafe(storageProps.GetType(), "storageCapacity");
+                        if (capProp != null)
+                            capacity = Convert.ToSingle(capProp.GetValue(storageProps));
+                        else if (capField != null)
+                            capacity = Convert.ToSingle(capField.GetValue(storageProps));
+                    }
+
+                    var amountProp = GetPropertySafe(compType, "AmountStored");
+                    if (amountProp != null)
+                        stored = Convert.ToSingle(amountProp.GetValue(comp));
+
+                    if (capacity > 0f && capacity > stored)
+                    {
+                        float toAdd = capacity - stored;
+                        var addMethod = compType.GetMethod("AddResource",
+                            System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance,
+                            null, new[] { typeof(float) }, null);
+                        if (addMethod != null)
+                        {
+                            addMethod.Invoke(comp, new object[] { toAdd });
+                        }
+                    }
+                    break;
+                }
+            }
+            catch { }
         }
 
         private static void TryRestorePipeStorage(Thing b, float amount)

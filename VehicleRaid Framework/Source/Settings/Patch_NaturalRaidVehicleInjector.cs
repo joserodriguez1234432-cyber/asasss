@@ -732,7 +732,7 @@ namespace VehicleRaidFramework
                 }
                 else
                 {
-                    Rot4 groupRot = seaGroupBase.OnEdge(map) ? seaGroupBase.GetBeginningOfRoadDirection(map) : Rot4.North;
+                    Rot4 groupRot = seaGroupBase.GetBeginningOfRoadDirection(map);
                     List<IntVec3> formationCells = VehicleTrafficManager.CalculateFormationCells(seaGroupBase, map, groupRot, seaVehicles, new List<IntVec3>());
                     spawnGroup(seaVehicles, formationCells, groupRot);
                 }
@@ -757,7 +757,7 @@ namespace VehicleRaidFramework
                     landGroupBase = CellFinder.TryFindRandomEdgeCellWith(c => c.GetTerrain(map) != null && !c.GetTerrain(map).IsWater && c.Standable(map), map, 0f, out IntVec3 safeEdge) ? safeEdge : CellFinder.RandomEdgeCell(map);
                 }
 
-                Rot4 groupRot = landGroupBase.OnEdge(map) ? landGroupBase.GetBeginningOfRoadDirection(map) : Rot4.North;
+                Rot4 groupRot = landGroupBase.GetBeginningOfRoadDirection(map);
                 List<IntVec3> formationCells = VehicleTrafficManager.CalculateFormationCells(landGroupBase, map, groupRot, landVehicles, new List<IntVec3>());
                 spawnGroup(landVehicles, formationCells, groupRot);
             }
