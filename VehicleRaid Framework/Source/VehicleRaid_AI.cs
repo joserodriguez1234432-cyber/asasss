@@ -7,6 +7,7 @@ using Verse.AI;
 using Verse.AI.Group;
 using RimWorld;
 using Vehicles;
+using VehicleRaid;
 using SmashTools;
 
 namespace VehicleRaidFramework
@@ -1121,6 +1122,7 @@ namespace VehicleRaidFramework
             {
                 if (v != vehicle && v.Faction == vehicle.Faction)
                 {
+                    if (IsVehicleHoveringOrAir(v)) continue;
                     int vSize = Mathf.Max(v.def.size.x, v.def.size.z);
                     allyRects.Add(v.OccupiedRect().ExpandedBy(3));
 
@@ -1203,6 +1205,21 @@ namespace VehicleRaidFramework
             }
 
             return IntVec3.Invalid;
+        }
+
+
+        private static bool IsVehicleHoveringOrAir(VehiclePawn v)
+        {
+            if (v == null || v.VehicleDef == null) return false;
+            if (v.VehicleDef.type == VehicleType.Air) return true;
+
+            var hoverComp = v.GetComp<CompVehicleHover>();
+            if (hoverComp != null && hoverComp.State != HoverState.Grounded)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public Thing FindNearestEnemy(VehiclePawn vehicle)

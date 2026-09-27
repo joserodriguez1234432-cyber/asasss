@@ -265,7 +265,7 @@ namespace VehicleRaidFramework
 
             if (dist <= DropOffRange + 5f)
             {
-                if (!CrewManager.IsGravshipVehicle(vehicle))
+                if (!CrewManager.IsGravshipVehicle(vehicle) && hasPassengers)
                 {
                     Patch_RaidVehicle_CrewDependency.HandleTransportDisembark(vehicle);
                 }

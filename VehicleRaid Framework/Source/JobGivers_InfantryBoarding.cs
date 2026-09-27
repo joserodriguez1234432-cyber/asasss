@@ -11,6 +11,96 @@ namespace VehicleRaidFramework
 {
     public static class VRF_TransportUtil
     {
+        public static bool IsVehicleMap(Map map)
+        {
+            if (map == null) return false;
+            if (map.Parent is global::VehicleMapFramework.MapParent_Vehicle) return true;
+            try
+            {
+                if (global::VehicleMapFramework.VehicleMapUtility.IsVehicleMapOf(map, out _)) return true;
+            }
+            catch { }
+            string typeName = map.Parent?.GetType()?.Name;
+            return typeName != null && (typeName.IndexOf("VehicleMap", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                        typeName.IndexOf("VehiclePawnWithMap", System.StringComparison.OrdinalIgnoreCase) >= 0);
+        }
+
+        public static bool IsManipulatingOrManning(Pawn pawn)
+        {
+            if (pawn == null) return false;
+            if (pawn.CurJobDef == JobDefOf.ManTurret) return true;
+            if (pawn.CurJob != null)
+            {
+                string jobDefName = pawn.CurJob.def?.defName;
+                if (jobDefName != null && (jobDefName.IndexOf("ManTurret", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                           jobDefName.IndexOf("Operate", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                           jobDefName.IndexOf("Mortar", System.StringComparison.OrdinalIgnoreCase) >= 0))
+                    return true;
+                if (pawn.CurJob.targetA.Thing is Building_TurretGun ||
+                    (pawn.CurJob.targetA.Thing is ThingWithComps twc && twc.GetComp<CompMannable>() != null))
+                    return true;
+            }
+            DutyDef duty = pawn.mindState?.duty?.def;
+            if (duty != null && (duty == DutyDefOf.ManClosestTurret || duty.defName.IndexOf("Man", System.StringComparison.OrdinalIgnoreCase) >= 0))
+                return true;
+            Lord lord = pawn.GetLord();
+            if (lord != null && lord.LordJob is LordJob_ManTurrets) return true;
+            if (MannableUtility.MannedThing(pawn) != null) return true;
+            return false;
+        }
+
+        public static bool IsPawnOnVehicleMapOrVMF(Pawn pawn, VehiclePawn vehicle = null)
+        {
+            if (pawn == null) return false;
+            if (pawn.Map != null && IsVehicleMap(pawn.Map)) return true;
+            if (vehicle is global::VehicleMapFramework.VehiclePawnWithMap vwm && vwm.VehicleMap != null && pawn.Map == vwm.VehicleMap) return true;
+            if (pawn.ParentHolder is VehicleRoleHandler h)
+            {
+                if (h.role is global::VehicleMapFramework.VehicleRoleBuildable || h.role.GetType().Name.Contains("Buildable"))
+                    return true;
+            }
+            return false;
+        }
+
+        public static bool IsNativeVFPassenger(Pawn pawn, VehiclePawn vehicle)
+        {
+            if (pawn == null || vehicle == null) return false;
+            if (pawn.Dead || pawn.Downed) return false;
+            if (IsPawnOnVehicleMapOrVMF(pawn, vehicle)) return false;
+            if (IsManipulatingOrManning(pawn)) return false;
+
+            if (pawn.ParentHolder is VehicleRoleHandler h && h.vehicle == vehicle)
+            {
+                if (h.role is global::VehicleMapFramework.VehicleRoleBuildable || h.role.GetType().Name.Contains("Buildable"))
+                    return false;
+                bool isPassenger = (h.role.HandlingTypes & HandlingType.Movement) == 0 &&
+                                   (h.role.HandlingTypes & HandlingType.Turret) == 0;
+                return isPassenger;
+            }
+            return false;
+        }
+
+        public static bool HasNativeVFPassengers(VehiclePawn vehicle)
+        {
+            if (vehicle?.handlers == null) return false;
+            for (int i = 0; i < vehicle.handlers.Count; i++)
+            {
+                var h = vehicle.handlers[i];
+                if (h?.role == null) continue;
+                if (h.role is global::VehicleMapFramework.VehicleRoleBuildable || h.role.GetType().Name.Contains("Buildable"))
+                    continue;
+                bool isPassenger = (h.role.HandlingTypes & HandlingType.Movement) == 0 &&
+                                   (h.role.HandlingTypes & HandlingType.Turret) == 0;
+                if (!isPassenger) continue;
+                for (int j = 0; j < h.thingOwner.Count; j++)
+                {
+                    if (h.thingOwner[j] is Pawn p && !p.Dead && !p.Downed && !IsPawnOnVehicleMapOrVMF(p, vehicle) && !IsManipulatingOrManning(p))
+                        return true;
+                }
+            }
+            return false;
+        }
+
         public const float CombatNearRadius = 22f;
         public const float BoardSearchRadius = 999f;
         public const float ImmediateThreatRadius = 10f;
@@ -438,6 +528,14 @@ namespace VehicleRaidFramework
             if (!(pawn.ParentHolder is VehicleRoleHandler handler)) return null;
             VehiclePawn vehicle = handler.vehicle;
             if (vehicle == null || !VRF_TransportUtil.IsTransportVehicle(vehicle)) return null;
+
+            if (handler.role is global::VehicleMapFramework.VehicleRoleBuildable ||
+                handler.role.GetType().Name.Contains("Buildable") ||
+                VRF_TransportUtil.IsPawnOnVehicleMapOrVMF(pawn, vehicle) ||
+                VRF_TransportUtil.IsManipulatingOrManning(pawn))
+            {
+                return null;
+            }
 
             float radius = VRF_TransportUtil.GetVehicleCombatRadius(vehicle);
             bool enemyNear = VRF_TransportUtil.HasEnemy(vehicle, radius);

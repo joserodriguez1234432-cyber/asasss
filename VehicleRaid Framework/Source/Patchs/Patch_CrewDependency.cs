@@ -64,9 +64,10 @@ namespace VehicleRaidFramework
             {
                 VehicleMapFramework.VRF_VehicleMapNpcUtility.MaintainVehicleMapCrew(vehicleWithMap);
 
-                // Allow non-gravship VMF transport vehicles to disembark passengers
+                // Only disembark if the vehicle has native Vehicle Framework passengers (NOT VMF interior map pawns or buildable seats)
                 if (!CrewManager.IsGravshipVehicle(__instance) &&
-                    (VRF_TransportUtil.IsTransportVehicle(__instance) || VRF_TransportUtil.IsArmedTransportVehicle(__instance)))
+                    (VRF_TransportUtil.IsTransportVehicle(__instance) || VRF_TransportUtil.IsArmedTransportVehicle(__instance)) &&
+                    VRF_TransportUtil.HasNativeVFPassengers(__instance))
                 {
                     if (lord?.CurLordToil is LordToil_VehicleExitMap exitToil)
                     {
@@ -373,6 +374,11 @@ namespace VehicleRaidFramework
             {
                 var handler = vehicle.handlers[i];
                 if (handler?.role == null) continue;
+                // Exclude any seats/roles belonging to Vehicle Map Framework (buildable seats on interior map)
+                if (handler.role is global::VehicleMapFramework.VehicleRoleBuildable ||
+                    handler.role.GetType().Name.Contains("Buildable"))
+                    continue;
+
                 bool isPassengerSlot = (handler.role.HandlingTypes & HandlingType.Movement) == 0 &&
                                        (handler.role.HandlingTypes & HandlingType.Turret) == 0;
                 if (!isPassengerSlot && !isUnarmedTransport) continue;
@@ -380,6 +386,8 @@ namespace VehicleRaidFramework
                 {
                     if (handler.thingOwner[j] is Pawn p && !p.Dead && !p.Downed)
                     {
+                        if (VRF_TransportUtil.IsPawnOnVehicleMapOrVMF(p, vehicle) || VRF_TransportUtil.IsManipulatingOrManning(p))
+                            continue;
                         hasPawnsToDisembark = true;
                         break;
                     }
@@ -398,12 +406,18 @@ namespace VehicleRaidFramework
             {
                 var handler = vehicle.handlers[i];
                 if (handler?.role == null) continue;
+                if (handler.role is global::VehicleMapFramework.VehicleRoleBuildable ||
+                    handler.role.GetType().Name.Contains("Buildable"))
+                    continue;
+
                 bool isPassengerSlot = (handler.role.HandlingTypes & HandlingType.Movement) == 0 &&
                                        (handler.role.HandlingTypes & HandlingType.Turret) == 0;
                 if (!isPassengerSlot && !isUnarmedTransport) continue;
                 for (int j = 0; j < handler.thingOwner.Count; j++)
                 {
                     if (!(handler.thingOwner[j] is Pawn p) || p.Dead || p.Downed) continue;
+                    if (VRF_TransportUtil.IsPawnOnVehicleMapOrVMF(p, vehicle) || VRF_TransportUtil.IsManipulatingOrManning(p))
+                        continue;
                     DutyDef pDuty = p.mindState?.duty?.def;
                     if (pDuty != null && (pDuty == VRF_DutyDefOf.VRF_InfantryExit ||
                         pDuty.defName == "VRF_InfantryExit")) continue;
@@ -451,15 +465,8 @@ namespace VehicleRaidFramework
                 VRF_TransportUtil.LastDisembarkTick[pawn.thingIDNumber] = Find.TickManager.TicksGame;
                 vehicle.DisembarkPawn(pawn);
 
-                // Vehicle Map Framework spawns disembarked pawns in vehicle.VehicleMap if in a buildable role.
-                // Ensure combat infantry pawns are spawned on the exterior battlefield map at exitCell:
-                if (pawn.Map != map)
-                {
-                    if (pawn.Spawned)
-                        pawn.DeSpawn(DestroyMode.Vanish);
-                    GenSpawn.Spawn(pawn, exitCell, map, WipeMode.Vanish);
-                }
-                else if (vehicleRect.Contains(pawn.Position))
+                // Only adjust position for native Vehicle Framework passengers placed on the external battlefield map:
+                if (pawn.Map == map && vehicleRect.Contains(pawn.Position))
                 {
                     pawn.Position = exitCell;
                     pawn.Notify_Teleported(false, true);

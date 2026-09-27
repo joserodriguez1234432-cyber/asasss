@@ -7,6 +7,7 @@ using Verse.AI;
 using Verse.AI.Group;
 using RimWorld;
 using Vehicles;
+using VehicleRaid;
 
 namespace VehicleRaidFramework
 {
@@ -24,7 +25,8 @@ namespace VehicleRaidFramework
             if (___vehicle.Faction == null || ___vehicle.Faction.IsPlayer) return;
             if (!__instance.Moving) return;
             if (___vehicle.CurJobDef != JobDefOf.Goto) return;
-            if (___vehicle.VehicleDef.type == VehicleType.Sea) return;
+            if (___vehicle.VehicleDef.type == VehicleType.Sea || ___vehicle.VehicleDef.type == VehicleType.Air) return;
+            if (IsVehicleHoveringOrAir(___vehicle)) return;
             if (!(___vehicle.GetLord()?.LordJob is LordJob_VehicleRaid)) return;
             if (__instance.RequestStatus == VehiclePathFollower.PathRequestStatus.Calculating) return;
 
@@ -159,6 +161,7 @@ namespace VehicleRaidFramework
                     Pawn p = lord.ownedPawns[i];
                     if (p is VehiclePawn v && v != vehicle && v.Faction == vehicle.Faction && v.Spawned && v.Map == map)
                     {
+                        if (IsVehicleHoveringOrAir(v)) continue;
                         int vSize = Mathf.Max(v.def.size.x, v.def.size.z);
                         tmpAllyRects.Add(v.OccupiedRect().ExpandedBy(3));
 
@@ -177,6 +180,7 @@ namespace VehicleRaidFramework
                     Pawn p = factionPawns[i];
                     if (p is VehiclePawn v && v != vehicle)
                     {
+                        if (IsVehicleHoveringOrAir(v)) continue;
                         int vSize = Mathf.Max(v.def.size.x, v.def.size.z);
                         tmpAllyRects.Add(v.OccupiedRect().ExpandedBy(3));
 
@@ -254,7 +258,24 @@ namespace VehicleRaidFramework
 
             return IntVec3.Invalid;
         }
+
+    private static bool IsVehicleHoveringOrAir(VehiclePawn v)
+    {
+        if (v == null || v.VehicleDef == null) return false;
+        if (v.VehicleDef.type == VehicleType.Air) return true;
+
+        var hoverComp = v.GetComp<CompVehicleHover>();
+        if (hoverComp != null && hoverComp.State != HoverState.Grounded)
+        {
+            return true;
+        }
+
+        return false;
     }
+
+    }
+
+
 
     public static class Patch_VVE_MovementController_NPC
     {

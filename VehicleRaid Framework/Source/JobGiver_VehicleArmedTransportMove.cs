@@ -117,7 +117,7 @@ namespace VehicleRaidFramework
 
             if (dist <= WaitRange)
             {
-                if (!CrewManager.IsGravshipVehicle(vehicle))
+                if (!CrewManager.IsGravshipVehicle(vehicle) && VRF_TransportUtil.HasNativeVFPassengers(vehicle))
                 {
                     Patch_RaidVehicle_CrewDependency.HandleTransportDisembark(vehicle);
                 }
@@ -220,7 +220,7 @@ namespace VehicleRaidFramework
                 return JobMaker.MakeJob(JobDefOf.Wait_Combat, 500, true);
             }
 
-            if (dist <= DropOffRange + 4f && !CrewManager.IsGravshipVehicle(vehicle))
+            if (dist <= DropOffRange + 4f && !CrewManager.IsGravshipVehicle(vehicle) && VRF_TransportUtil.HasNativeVFPassengers(vehicle))
             {
                 Patch_RaidVehicle_CrewDependency.HandleTransportDisembark(vehicle);
             }
