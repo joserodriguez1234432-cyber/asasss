@@ -20,7 +20,29 @@ namespace VehicleRaidFramework
         public static bool IsGravshipVehicle(VehiclePawn vehicle)
         {
             if (vehicle == null) return false;
-            return vehicle is global::VehicleMapFramework.VehiclePawnWithMap;
+
+            var hoverComp = vehicle.GetComp<VehicleRaid.CompVehicleHover>();
+            if (hoverComp != null && hoverComp.FlightType == VehicleRaid.FlightType.Gravship)
+                return true;
+
+            if (vehicle.def != null)
+            {
+                if (vehicle.def.defName != null && vehicle.def.defName.IndexOf("grav", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                    return true;
+                if (vehicle.def.label != null && vehicle.def.label.IndexOf("grav", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                    return true;
+
+                if (vehicle.def.modExtensions != null)
+                {
+                    foreach (var ext in vehicle.def.modExtensions)
+                    {
+                        if (ext != null && ext.GetType().Name.IndexOf("Gravship", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                            return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public static void ReassignCrew(VehiclePawn vehicle)
@@ -150,10 +172,21 @@ namespace VehicleRaidFramework
                 loneDriverTicks.Remove(vehicle);
             }
 
-            if (VRF_TransportUtil.IsTransportVehicle(vehicle)) return;
+            if (VRF_TransportUtil.IsTransportVehicle(vehicle) || VRF_TransportUtil.IsArmedTransportVehicle(vehicle)) return;
 
             if (totalConscious == 1 && HasOperationalDriver(vehicle))
             {
+                // Check if vehicle is moving towards an objective / cell
+                bool isMoving = (vehicle.pather != null && vehicle.pather.Moving) || vehicle.CurJobDef == JobDefOf.Goto;
+                // Check if vehicle is waiting for someone or if friendly infantry are nearby/boarding
+                bool isWaitingOrBoarding = IsAnyPawnBoarding(vehicle) || AnyFriendlyInfantryNearby(vehicle) || vehicle.CurJobDef == JobDefOf.Wait_Combat;
+
+                if (isMoving || isWaitingOrBoarding)
+                {
+                    loneDriverTicks.Remove(vehicle);
+                    return;
+                }
+
                 if (!loneDriverTicks.ContainsKey(vehicle))
                 {
                     loneDriverTicks[vehicle] = Find.TickManager.TicksGame;
@@ -494,7 +527,8 @@ namespace VehicleRaidFramework
     {
         public static bool Prefix(Pawn kidnapper, ref bool __result, ref Pawn victim)
         {
-            if (kidnapper is VehiclePawn || kidnapper?.health?.capacities == null)
+            if (kidnapper == null || kidnapper is VehiclePawn || !kidnapper.Spawned || kidnapper.Map == null ||
+                kidnapper.ParentHolder is VehicleRoleHandler || kidnapper?.health?.capacities == null)
             {
                 victim = null;
                 __result = false;
@@ -509,7 +543,8 @@ namespace VehicleRaidFramework
     {
         public static bool Prefix(Pawn searcher, ref Pawn __result)
         {
-            if (searcher is VehiclePawn || searcher?.health?.capacities == null)
+            if (searcher == null || searcher is VehiclePawn || !searcher.Spawned || searcher.Map == null ||
+                searcher.ParentHolder is VehicleRoleHandler || searcher?.health?.capacities == null)
             {
                 __result = null;
                 return false;

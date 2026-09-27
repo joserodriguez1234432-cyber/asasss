@@ -413,6 +413,10 @@ namespace VehicleRaidFramework
                 // Skip unmanned vehicles — no crew means no threat and no valid target
                 if (t is VehiclePawn targetVehicle && !HasLiveCrew(targetVehicle)) continue;
 
+                // Hover vehicle without integrated weapons never targets colony animals
+                // (e.g. gravship: its turrets live in the interior map, not built into the vehicle)
+                if (!HasIntegratedWeapons(vehicle) && IsColonyAnimal(t)) continue;
+
                 if (t.Map.fogGrid.IsFogged(t.Position)) continue;
 
                 RoofDef roof = t.Map.roofGrid.RoofAt(t.Position);
@@ -441,6 +445,27 @@ namespace VehicleRaidFramework
             }
 
             return bestInRange ?? bestOutOfRange;
+        }
+
+        /// <summary>
+        /// True if the vehicle has integrated weapons (Vehicle Framework turrets built into the
+        /// vehicle itself). Turrets inside a vehicle interior map (e.g. gravship) do NOT count:
+        /// they are separate buildings, not integrated weapons.
+        /// </summary>
+        private static bool HasIntegratedWeapons(VehiclePawn vehicle)
+        {
+            var turretComp = vehicle.CompVehicleTurrets;
+            return turretComp != null && turretComp.Turrets != null && turretComp.Turrets.Count > 0;
+        }
+
+        /// <summary>
+        /// True if the thing is an animal that belongs to the player colony (including
+        /// trained/owned colony animals).
+        /// </summary>
+        private static bool IsColonyAnimal(Thing t)
+        {
+            return t is Pawn p && p.Spawned && p.RaceProps.Animal
+                && p.Faction == Faction.OfPlayer;
         }
 
         /// <summary>

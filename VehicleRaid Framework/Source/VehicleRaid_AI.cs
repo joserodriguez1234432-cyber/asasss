@@ -1299,6 +1299,15 @@ namespace VehicleRaidFramework
             return bestWall;
         }
 
+        private static bool IsHoverActive(VehiclePawn vp)
+        {
+            if (vp == null) return false;
+            var hoverComp = vp.GetComp<VehicleRaid.CompVehicleHover>();
+            if (hoverComp != null && (hoverComp.IsAirborne || hoverComp.State != VehicleRaid.HoverState.Grounded))
+                return true;
+            return false;
+        }
+
         private bool IsBlockedByFriendlyVehicle(VehiclePawn vehicle, Thing enemy, out VehiclePawn blocker)
         {
             blocker = null;
@@ -1318,6 +1327,7 @@ namespace VehicleRaidFramework
                     VehiclePawn other = PathingHelper.AnyVehicleBlockingPathAt(cell, vehicle);
                     if (other != null && other != vehicle && other.Faction == vehicle.Faction)
                     {
+                        if (IsHoverActive(other)) continue;
                         blocker = other;
                         return true;
                     }

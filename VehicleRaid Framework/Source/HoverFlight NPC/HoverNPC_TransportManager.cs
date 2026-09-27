@@ -521,6 +521,26 @@ namespace VehicleRaidFramework
             return pos;
         }
 
+        /// <summary>
+        /// True if the vehicle has integrated weapons (Vehicle Framework turrets built into the
+        /// vehicle itself). Turrets inside a vehicle interior map (e.g. gravship) do NOT count.
+        /// </summary>
+        private static bool HasIntegratedWeapons(VehiclePawn vehicle)
+        {
+            var turretComp = vehicle.CompVehicleTurrets;
+            return turretComp != null && turretComp.Turrets != null && turretComp.Turrets.Count > 0;
+        }
+
+        /// <summary>
+        /// True if the thing is an animal that belongs to the player colony (including
+        /// trained/owned colony animals).
+        /// </summary>
+        private static bool IsColonyAnimal(Thing t)
+        {
+            return t is Pawn p && p.Spawned && p.RaceProps.Animal
+                && p.Faction == Faction.OfPlayer;
+        }
+
         private Thing FindBestTarget(VehiclePawn vehicle, CompVehicleHover hoverComp, float maxDistance = -1f)
         {
             var targets = vehicle.Map.attackTargetsCache.TargetsHostileToFaction(vehicle.Faction);
@@ -538,6 +558,10 @@ namespace VehicleRaidFramework
                 Thing thing = t.Thing;
                 if (thing == null || thing.Destroyed || !thing.Spawned) continue;
                 if (thing is Pawn p && (p.Dead || p.Downed)) continue;
+
+                // Hover vehicle without integrated weapons never targets colony animals
+                if (!HasIntegratedWeapons(vehicle) && IsColonyAnimal(thing)) continue;
+
                 if (thing.Map.fogGrid.IsFogged(thing.Position)) continue;
 
                 float dSq = (hoverPos - new Vector2(thing.DrawPos.x, thing.DrawPos.z)).sqrMagnitude;

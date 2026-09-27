@@ -117,6 +117,11 @@ namespace VehicleRaidFramework
 
             if (dist <= WaitRange)
             {
+                if (!CrewManager.IsGravshipVehicle(vehicle))
+                {
+                    Patch_RaidVehicle_CrewDependency.HandleTransportDisembark(vehicle);
+                }
+
                 if (vehicle.CurJobDef == JobDefOf.Wait_Combat) return null;
                 return JobMaker.MakeJob(JobDefOf.Wait_Combat, 600, true);
             }
@@ -213,6 +218,11 @@ namespace VehicleRaidFramework
             {
                 if (vehicle.CurJobDef == JobDefOf.Wait_Combat) return null;
                 return JobMaker.MakeJob(JobDefOf.Wait_Combat, 500, true);
+            }
+
+            if (dist <= DropOffRange + 4f && !CrewManager.IsGravshipVehicle(vehicle))
+            {
+                Patch_RaidVehicle_CrewDependency.HandleTransportDisembark(vehicle);
             }
 
             if (vehicle.CurJobDef == JobDefOf.Goto &&

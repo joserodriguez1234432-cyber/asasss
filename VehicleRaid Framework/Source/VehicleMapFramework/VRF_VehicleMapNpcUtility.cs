@@ -127,13 +127,23 @@ namespace VehicleRaidFramework.VehicleMapFramework
             int consciousCrew = CountConsciousCrew(vehicle, interiorMap);
             if (consciousCrew == 1)
             {
-                if (!loneDriverSinceTick.TryGetValue(vehicle, out int sinceTick))
+                bool isMoving = (vehicle.pather != null && vehicle.pather.Moving) || vehicle.CurJobDef == JobDefOf.Goto;
+                bool isWaitingOrBoarding = CrewManager.IsAnyPawnBoarding(vehicle) || CrewManager.AnyFriendlyInfantryNearby(vehicle) || vehicle.CurJobDef == JobDefOf.Wait_Combat;
+
+                if (isMoving || isWaitingOrBoarding)
                 {
-                    loneDriverSinceTick[vehicle] = Find.TickManager.TicksGame;
+                    loneDriverSinceTick.Remove(vehicle);
                 }
-                else if (Find.TickManager.TicksGame - sinceTick >= LoneDriverExitDelayTicks)
+                else
                 {
-                    RequestMapExit(vehicle, "MessageVRF_VehicleRetreating");
+                    if (!loneDriverSinceTick.TryGetValue(vehicle, out int sinceTick))
+                    {
+                        loneDriverSinceTick[vehicle] = Find.TickManager.TicksGame;
+                    }
+                    else if (Find.TickManager.TicksGame - sinceTick >= LoneDriverExitDelayTicks)
+                    {
+                        RequestMapExit(vehicle, "MessageVRF_VehicleRetreating");
+                    }
                 }
             }
             else

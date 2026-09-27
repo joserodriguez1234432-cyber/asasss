@@ -10,9 +10,6 @@ using SmashTools.Performance;
 
 namespace VehicleRaidFramework
 {
-
-
-
     [HarmonyPatch(typeof(Vehicles.VehiclePathFollower), "GeneratePath")]
     public static class Patch_VehiclePathFollower_SuppressMessage
     {
@@ -23,12 +20,24 @@ namespace VehicleRaidFramework
 
             if (vehicle != null && vehicle.Faction != null && !vehicle.Faction.IsPlayer)
             {
-                VehiclePath path = traverse.Method("FindPath", token).GetValue<VehiclePath>();
+                VehiclePath path = null;
+                try
+                {
+                    path = traverse.Method("FindPath", token).GetValue<VehiclePath>();
+                }
+                catch (Exception ex)
+                {
+                    // Si el pathfinder de Vehicle Framework falla o lanza IndexOutOfRangeException,
+                    // evitamos que la tarea muera en silencio y congele el vehiculo.
+                    __instance.PatherFailed();
+                    traverse.Property("RequestStatus").SetValue(VehiclePathFollower.PathRequestStatus.None);
+                    return false;
+                }
 
                 if (path == null || !path.Found)
                 {
-                    
                     __instance.PatherFailed();
+                    traverse.Property("RequestStatus").SetValue(VehiclePathFollower.PathRequestStatus.None);
                 }
                 else
                 {
@@ -49,18 +58,18 @@ namespace VehicleRaidFramework
             return true;
         }
     }
+
     [HarmonyPatch(typeof(Vehicles.VehiclePathFinder), "FindPath", new Type[] { typeof(IntVec3), typeof(LocalTargetInfo), typeof(Vehicles.VehiclePawn), typeof(CancellationToken), typeof(PathEndMode) })]
     public static class Patch_VehiclePathFinder_SuppressMessage
     {
         public static bool Prefix(Vehicles.VehiclePathFinder __instance, ref Vehicles.VehiclePath __result, IntVec3 start, LocalTargetInfo dest, Vehicles.VehiclePawn vehicle, CancellationToken token, PathEndMode peMode)
         {
-
             if (vehicle != null && vehicle.Faction != null && !vehicle.Faction.IsPlayer)
             {
-                if (!vehicle.DrivableRectOnCell(dest.Cell, Ext_Vehicles.DestinationHitboxReq.AnyRotation))
+                if (!dest.Cell.IsValid || vehicle.Map == null || !dest.Cell.InBounds(vehicle.Map) ||
+                    !vehicle.DrivableRectOnCell(dest.Cell, Ext_Vehicles.DestinationHitboxReq.AnyRotation))
                 {
                     __result = VehiclePath.NotFound;
-
                     return false;
                 }
             }
@@ -82,6 +91,3 @@ namespace VehicleRaidFramework
         }
     }
 }
-
-
-

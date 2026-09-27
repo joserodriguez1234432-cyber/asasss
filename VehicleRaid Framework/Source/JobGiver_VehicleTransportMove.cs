@@ -265,6 +265,11 @@ namespace VehicleRaidFramework
 
             if (dist <= DropOffRange + 5f)
             {
+                if (!CrewManager.IsGravshipVehicle(vehicle))
+                {
+                    Patch_RaidVehicle_CrewDependency.HandleTransportDisembark(vehicle);
+                }
+
                 if (!lastDisembarkBeganTick.ContainsKey(vehicle.thingIDNumber))
                     MarkDisembarkBegan(vehicle);
 
@@ -351,10 +356,22 @@ namespace VehicleRaidFramework
                 if (!vehicle.DrivableRectOnCell(cell, Ext_Vehicles.DestinationHitboxReq.AnyRotation)) continue;
 
                 float score = cell.DistanceToSquared(vehicle.Position);
-                if (score < bestScore && vehicle.CanReachVehicle(new LocalTargetInfo(cell), PathEndMode.OnCell, Danger.Deadly, TraverseMode.NoPassClosedDoors))
+                if (score < bestScore)
                 {
-                    bestScore = score;
-                    bestCell = cell;
+                    bool reachable = false;
+                    try
+                    {
+                        reachable = vehicle.CanReachVehicle(new LocalTargetInfo(cell), PathEndMode.OnCell, Danger.Deadly, TraverseMode.NoPassClosedDoors);
+                    }
+                    catch
+                    {
+                        reachable = false;
+                    }
+                    if (reachable)
+                    {
+                        bestScore = score;
+                        bestCell = cell;
+                    }
                 }
             }
 

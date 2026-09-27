@@ -63,6 +63,20 @@ namespace VehicleRaidFramework
             if (__instance is global::VehicleMapFramework.VehiclePawnWithMap vehicleWithMap)
             {
                 VehicleMapFramework.VRF_VehicleMapNpcUtility.MaintainVehicleMapCrew(vehicleWithMap);
+
+                // Allow non-gravship VMF transport vehicles to disembark passengers
+                if (!CrewManager.IsGravshipVehicle(__instance) &&
+                    (VRF_TransportUtil.IsTransportVehicle(__instance) || VRF_TransportUtil.IsArmedTransportVehicle(__instance)))
+                {
+                    if (lord?.CurLordToil is LordToil_VehicleExitMap exitToil)
+                    {
+                        CheckTransportExitDuty(__instance, exitToil);
+                    }
+                    else
+                    {
+                        HandleTransportDisembark(__instance);
+                    }
+                }
             }
             else if (__instance.VehicleDef.type == VehicleType.Air && __instance.GetComp<VehicleRaid.CompVehicleHover>() == null)
             {
@@ -341,8 +355,11 @@ namespace VehicleRaidFramework
                 vehicle.mindState.duty = new PawnDuty(targetDuty);
         }
 
-        private static void HandleTransportDisembark(VehiclePawn vehicle)
+        public static void HandleTransportDisembark(VehiclePawn vehicle)
         {
+            if (vehicle == null || !vehicle.Spawned || vehicle.Map == null) return;
+            if (CrewManager.IsGravshipVehicle(vehicle)) return;
+
             float detectionRadius = VRF_TransportUtil.GetVehicleCombatRadius(vehicle);
             if (!VRF_TransportUtil.HasEnemy(vehicle, detectionRadius)) return;
 
@@ -433,6 +450,20 @@ namespace VehicleRaidFramework
 
                 VRF_TransportUtil.LastDisembarkTick[pawn.thingIDNumber] = Find.TickManager.TicksGame;
                 vehicle.DisembarkPawn(pawn);
+
+                // Vehicle Map Framework spawns disembarked pawns in vehicle.VehicleMap if in a buildable role.
+                // Ensure combat infantry pawns are spawned on the exterior battlefield map at exitCell:
+                if (pawn.Map != map)
+                {
+                    if (pawn.Spawned)
+                        pawn.DeSpawn(DestroyMode.Vanish);
+                    GenSpawn.Spawn(pawn, exitCell, map, WipeMode.Vanish);
+                }
+                else if (vehicleRect.Contains(pawn.Position))
+                {
+                    pawn.Position = exitCell;
+                    pawn.Notify_Teleported(false, true);
+                }
 
                 if (!pawn.Spawned && pawn.ParentHolder == null) continue;
 

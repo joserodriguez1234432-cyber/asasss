@@ -13,6 +13,13 @@ namespace VehicleRaidFramework
 {
     public static class VehicleTrafficManager
     {
+        public static bool IsHoverActive(VehiclePawn vehicle)
+        {
+            if (vehicle == null) return false;
+            var hover = vehicle.GetComp<VehicleRaid.CompVehicleHover>();
+            return hover != null && (hover.State == VehicleRaid.HoverState.Hovering || hover.State == VehicleRaid.HoverState.TakingOff || hover.IsAirborne);
+        }
+
         private const int MinSeparationBetweenHitboxes = 3;
 
 

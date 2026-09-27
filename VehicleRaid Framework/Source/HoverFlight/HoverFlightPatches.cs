@@ -1306,4 +1306,44 @@ namespace VehicleRaid
         }
     }
 
+
+    [HarmonyPatch(typeof(PathingHelper), nameof(PathingHelper.AnyVehicleBlockingPathAt))]
+    public static class Patch_PathingHelper_AnyVehicleBlockingPathAt
+    {
+        [HarmonyPostfix]
+        public static void Postfix(ref VehiclePawn __result)
+        {
+            if (__result != null && IsHoverActive(__result))
+            {
+                __result = null;
+            }
+        }
+
+        private static bool IsHoverActive(VehiclePawn vp)
+        {
+            if (vp == null) return false;
+            var hoverComp = vp.GetComp<CompVehicleHover>();
+            return hoverComp != null && (hoverComp.IsAirborne || hoverComp.State != HoverState.Grounded);
+        }
+    }
+
+    [HarmonyPatch(typeof(VehiclePositionManager), nameof(VehiclePositionManager.ClaimedBy), new Type[] { typeof(IntVec3) })]
+    public static class Patch_VehiclePositionManager_ClaimedBy
+    {
+        [HarmonyPostfix]
+        public static void Postfix(ref VehiclePawn __result)
+        {
+            if (__result != null && IsHoverActive(__result))
+            {
+                __result = null;
+            }
+        }
+
+        private static bool IsHoverActive(VehiclePawn vp)
+        {
+            if (vp == null) return false;
+            var hoverComp = vp.GetComp<CompVehicleHover>();
+            return hoverComp != null && (hoverComp.IsAirborne || hoverComp.State != HoverState.Grounded);
+        }
+    }
 }
